@@ -4,9 +4,7 @@
     {
         public int ID { get; set; }
         public string StudioName { get; set; }
-        public Studio()
-        {
-                
-        }
+
+        public ICollection<DVDTitle> DVDTitles { get; set; }
     }
 }
