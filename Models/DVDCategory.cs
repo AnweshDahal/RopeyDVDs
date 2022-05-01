@@ -6,9 +6,5 @@
         public string CategoryDescription { get; set; }
         public bool AgeRestricted { get; set; }
 
-        public DVDCategory()
-        {
-
-        }
     }
 }
