@@ -4,6 +4,7 @@ namespace RopeyDVDs.Models
 {
     public class CastMember
     {
+        public int ID { get; set; }
       
         [ForeignKey("DVDTitle")]
         public int DVDNumber { get; set; }
