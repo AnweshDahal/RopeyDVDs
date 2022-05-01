@@ -75,20 +75,20 @@ namespace RopeyDVDs.Controllers
                     Expiration = token.ValidTo
                 };
                 ViewBag.User = userDetails;
-                return RedirectToAction("UserDetails", ViewBag.User);
+                return View("UserDetails");
             }
             return RedirectToAction("UnauthorizedAccess");
         }
 
         // GET: Authentication/RegisterUser
-        public IActionResult Register()
+        public IActionResult RegisterUser()
         {
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register([FromBody] UserRegisterModel model)
+        public async Task<IActionResult> RegisterUser(UserRegisterModel model)
         {
             var userExists = await _userManager.FindByNameAsync(model.Username);
             if (userExists != null)
@@ -106,15 +106,15 @@ namespace RopeyDVDs.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        // GET: Authentication/RegisterAdmin
-        public IActionResult RegisterAdmin()
+        // GET: Authentication/RegisterManager
+        public IActionResult RegisterManager()
         {
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RegisterAdmin(UserRegisterModel model)
+        public async Task<IActionResult> RegisterManager(UserRegisterModel model)
         {
             var userExists = await _userManager.FindByNameAsync(model.Username);
             if (userExists != null)
@@ -130,16 +130,16 @@ namespace RopeyDVDs.Controllers
             if (!result.Succeeded)
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
 
-            if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
-                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
+            if (!await _roleManager.RoleExistsAsync(UserRoles.Manager))
+                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Manager));
             if (!await _roleManager.RoleExistsAsync(UserRoles.User))
                 await _roleManager.CreateAsync(new IdentityRole(UserRoles.User));
 
-            if (await _roleManager.RoleExistsAsync(UserRoles.Admin))
+            if (await _roleManager.RoleExistsAsync(UserRoles.Manager))
             {
-                await _userManager.AddToRoleAsync(user, UserRoles.Admin);
+                await _userManager.AddToRoleAsync(user, UserRoles.Manager);
             }
-            if (await _roleManager.RoleExistsAsync(UserRoles.Admin))
+            if (await _roleManager.RoleExistsAsync(UserRoles.Manager))
             {
                 await _userManager.AddToRoleAsync(user, UserRoles.User);
             }
