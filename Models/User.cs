@@ -1,6 +1,6 @@
 ﻿namespace RopeyDVDs.Models
 {
-    public class User: BaseModel
+    public class User
     {
         public int Id { get; set; }
         public string UserName { get; set; }
