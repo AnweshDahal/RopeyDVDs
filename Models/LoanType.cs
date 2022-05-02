@@ -1,6 +1,6 @@
 ﻿namespace RopeyDVDs.Models
 {
-    public class LoanType
+    public class LoanType: BaseModel
     {
         public int Id { get; set; }
         public string? Type { get; set; }

@@ -2,7 +2,7 @@
 
 namespace RopeyDVDs.Models
 {
-    public class Loan
+    public class Loan: BaseModel
     {
         public int Id { get; set; }
 

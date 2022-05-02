@@ -2,7 +2,7 @@
 
 namespace RopeyDVDs.Models
 {
-    public class DVDCopy
+    public class DVDCopy: BaseModel
     {
         public int Id { get; set; }
 
