@@ -2,7 +2,7 @@
 
 namespace RopeyDVDs.Models
 {
-    public class Member: BaseModel
+    public class Member
     {
         public int Id { get; set; }
         public string? MemberLastName { get; set; }

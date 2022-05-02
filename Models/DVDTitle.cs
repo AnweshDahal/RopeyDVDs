@@ -2,7 +2,7 @@
 
 namespace RopeyDVDs.Models
 {
-    public class DVDTitle: BaseModel
+    public class DVDTitle
     {
         public int ID { get; set; }
 
