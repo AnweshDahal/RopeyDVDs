@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RopeyDVDs.DBContext;
 using RopeyDVDs.Models;
+// Adding Bcrypt 
+using BCrypt.Net;
 
 namespace RopeyDVDs.Controllers
 {
@@ -50,6 +52,10 @@ namespace RopeyDVDs.Controllers
             return View();
         }
 
+        //// POST: User/Login
+        //[HttpPost]
+        //public async Task<IActionResult>
+
         // POST: Users/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -57,6 +63,7 @@ namespace RopeyDVDs.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,UserName,UserType,Password")] User user)
         {
+            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
             if (ModelState.IsValid)
             {
                 _context.Add(user);

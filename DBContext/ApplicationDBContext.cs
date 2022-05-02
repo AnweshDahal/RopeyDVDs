@@ -13,6 +13,7 @@ namespace RopeyDVDs.DBContext
         }
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<CastMember>().HasKey(cm => new { cm.DVDNumber, cm.ActorNumber });
             base.OnModelCreating(builder);
         }
         public DbSet<RopeyDVDs.Models.Actor> Actor { get; set; }

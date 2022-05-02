@@ -1,6 +1,6 @@
 ﻿namespace RopeyDVDs.Models
 {
-    public class MembershipCategory
+    public class MembershipCategory: BaseModel
     {
         public int Id { get; set; }
         public string? MembersgipCategoryDescription{ get; set; }

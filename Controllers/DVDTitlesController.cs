@@ -26,6 +26,50 @@ namespace RopeyDVDs.Controllers
             return View(await _context.DVDTitle.ToListAsync());
         }
 
+        /**
+         * Get DVD Titles, Producer, Studio, Cast of all
+         * DVDs with the DVD in increasing order of DateReleased,
+         * Show titles of each DVD and the names of all cast member in 
+         * increasing order in relation to the last name of the cast member
+         */
+        public async Task<IActionResult> DVDDetails()
+        {
+            //var dvd = await _context.DVDTitle
+            //    .Join(
+            //        _context.Producer,
+            //        dvd => dvd.ProducerNumber,
+            //        producer => producer.Id,
+            //        (dvd, producer) => new
+            //        {
+            //            ProducerName = producer.ProducerName
+            //        }
+            //    ).Join(
+            //        _context.Studio,
+            //        dvd => dvd.StudioNumber,
+            //        studio => studio.ID,
+            //        (dvd, studio) => new
+            //        {
+            //            StudioName = studio.StudioName,
+            //        }
+            //    ).ToListAsync();
+            var dvd = await _context.DVDTitle.ToListAsync();
+            var producer = await _context.Producer.ToListAsync(); ;
+            var studio = await _context.Studio.ToListAsync();
+            var castMember = await _context.CastMember
+                .Join(
+                    _context.Actor, 
+                    cast => cast.ActorNumber,
+                    actor => actor.Id,
+                    (cast, actor) => new
+                    {
+                        FirstName = actor.ActorFirstName,
+                        LastName = actor.ActorSurName,
+                    }
+
+                ).ToListAsync();
+            return View();
+        }
+
         // GET: DVDTitles/Details/5
         public async Task<IActionResult> Details(int? id)
         {

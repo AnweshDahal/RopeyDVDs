@@ -1,6 +1,6 @@
 ﻿namespace RopeyDVDs.Models
 {
-    public class Studio
+    public class Studio: BaseModel
     {
         public int ID { get; set; }
         public string StudioName { get; set; }
