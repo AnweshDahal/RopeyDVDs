@@ -47,6 +47,13 @@ namespace RopeyDVDs.Controllers
         // GET: DVDCopies/Create
         public IActionResult Create()
         {
+            var dvdNumber = _context.DVDTitle.Select(x => new SelectListItem
+            {
+                Value = x.ID.ToString(),
+                Text = x.ID.ToString()
+            });
+
+            ViewBag.DVDNumber = dvdNumber;
             return View();
         }
 

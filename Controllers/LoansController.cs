@@ -47,6 +47,28 @@ namespace RopeyDVDs.Controllers
         // GET: Loans/Create
         public IActionResult Create()
         {
+            // Loan Type Number
+            var loanType = _context.LoanType.Select(m => new SelectListItem
+            {
+                Value = m.Id.ToString(),
+                Text = m.Type
+            });
+
+            ViewBag.LoanType = loanType;
+            // Copy Number
+            var copyNumber = _context.DVDCopy.Select(m => new SelectListItem
+            {
+                Value = m.Id.ToString(),
+                Text = m.DVDNumber.ToString()
+            });
+            ViewBag.DVDCopy = copyNumber;
+            // Member Number
+            var member = _context.Member.Select(m => new SelectListItem
+            {
+                Value = m.Id.ToString(),
+                Text = m.MemberFirstName
+            });
+            ViewBag.Member = member;
             return View();
         }
 

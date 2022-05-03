@@ -47,6 +47,12 @@ namespace RopeyDVDs.Controllers
         // GET: Members/Create
         public IActionResult Create()
         {
+            var membershipCategory = _context.MembershipCategory.Select( a => new SelectListItem
+            {
+                Value = a.Id.ToString(),
+                Text = a.MembersgipCategoryDescription
+            });
+            ViewBag.MembershipCategory = membershipCategory;
             return View();
         }
 
