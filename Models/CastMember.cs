@@ -7,7 +7,7 @@ namespace RopeyDVDs.Models
     {
         [Key]
         public int ID { get; set; }
-      
+
         [ForeignKey("DVDTitle")]
         public int DVDNumber { get; set; }
         public virtual DVDTitle? DVDTitle { get; set; }
