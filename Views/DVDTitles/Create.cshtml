@@ -14,18 +14,25 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="ProducerNumber" class="control-label"></label>
-                <input asp-for="ProducerNumber" class="form-control" />
-                <span asp-validation-for="ProducerNumber" class="text-danger"></span>
+                <select asp-for="ProducerNumber" class ="form-control" asp-items="ViewBag.ProducerNumber"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="DVDName" class="control-label"></label>
+                <input asp-for="DVDName" class="form-control" />
+                <span asp-validation-for="DVDName" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
+                </label>
             </div>
             <div class="form-group">
                 <label asp-for="CategoryNumber" class="control-label"></label>
-                <input asp-for="CategoryNumber" class="form-control" />
-                <span asp-validation-for="CategoryNumber" class="text-danger"></span>
+                <select asp-for="CategoryNumber" class ="form-control" asp-items="ViewBag.CategoryNumber"></select>
             </div>
             <div class="form-group">
                 <label asp-for="StudioNumber" class="control-label"></label>
-                <input asp-for="StudioNumber" class="form-control" />
-                <span asp-validation-for="StudioNumber" class="text-danger"></span>
+                <select asp-for="StudioNumber" class ="form-control" asp-items="ViewBag.StudioNumber"></select>
             </div>
             <div class="form-group">
                 <label asp-for="DateReleased" class="control-label"></label>

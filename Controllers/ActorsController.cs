@@ -146,7 +146,6 @@ namespace RopeyDVDs.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-      
         private bool ActorExists(int id)
         {
             return _context.Actor.Any(e => e.Id == id);
