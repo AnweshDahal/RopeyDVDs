@@ -22,6 +22,21 @@ namespace RopeyDVDs.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("ActorDVDTitle", b =>
+                {
+                    b.Property<int>("ActorId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DVDTitleID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ActorId", "DVDTitleID");
+
+                    b.HasIndex("DVDTitleID");
+
+                    b.ToTable("ActorDVDTitle");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -229,11 +244,9 @@ namespace RopeyDVDs.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("ActorFirstName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ActorSurName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -257,6 +270,10 @@ namespace RopeyDVDs.Migrations
 
                     b.HasKey("ID");
 
+                    b.HasIndex("ActorNumber");
+
+                    b.HasIndex("DVDNumber");
+
                     b.ToTable("CastMember");
                 });
 
@@ -272,7 +289,6 @@ namespace RopeyDVDs.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("CategoryDescription")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -295,6 +311,8 @@ namespace RopeyDVDs.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DVDNumber");
 
                     b.ToTable("DVDCopy");
                 });
@@ -327,6 +345,12 @@ namespace RopeyDVDs.Migrations
 
                     b.HasKey("ID");
 
+                    b.HasIndex("CategoryNumber");
+
+                    b.HasIndex("ProducerNumber");
+
+                    b.HasIndex("StudioNumber");
+
                     b.ToTable("DVDTitle");
                 });
 
@@ -357,6 +381,12 @@ namespace RopeyDVDs.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CopyNumber");
+
+                    b.HasIndex("LoanTypeNumber");
+
+                    b.HasIndex("MemberNumber");
 
                     b.ToTable("Loan");
                 });
@@ -404,6 +434,8 @@ namespace RopeyDVDs.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MembershipCategoryNumber");
 
                     b.ToTable("Member");
                 });
@@ -470,20 +502,32 @@ namespace RopeyDVDs.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Password")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserType")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("User");
+                });
+
+            modelBuilder.Entity("ActorDVDTitle", b =>
+                {
+                    b.HasOne("RopeyDVDs.Models.Actor", null)
+                        .WithMany()
+                        .HasForeignKey("ActorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RopeyDVDs.Models.DVDTitle", null)
+                        .WithMany()
+                        .HasForeignKey("DVDTitleID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -535,6 +579,141 @@ namespace RopeyDVDs.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("RopeyDVDs.Models.CastMember", b =>
+                {
+                    b.HasOne("RopeyDVDs.Models.Actor", "Actor")
+                        .WithMany()
+                        .HasForeignKey("ActorNumber")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RopeyDVDs.Models.DVDTitle", "DVDTitle")
+                        .WithMany()
+                        .HasForeignKey("DVDNumber")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Actor");
+
+                    b.Navigation("DVDTitle");
+                });
+
+            modelBuilder.Entity("RopeyDVDs.Models.DVDCopy", b =>
+                {
+                    b.HasOne("RopeyDVDs.Models.DVDTitle", "DVDTitle")
+                        .WithMany("DVDCopies")
+                        .HasForeignKey("DVDNumber")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DVDTitle");
+                });
+
+            modelBuilder.Entity("RopeyDVDs.Models.DVDTitle", b =>
+                {
+                    b.HasOne("RopeyDVDs.Models.DVDCategory", "DVDCategory")
+                        .WithMany("DVDTitles")
+                        .HasForeignKey("CategoryNumber")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RopeyDVDs.Models.Producer", "Producer")
+                        .WithMany("DVDTitles")
+                        .HasForeignKey("ProducerNumber")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RopeyDVDs.Models.Studio", "Studio")
+                        .WithMany("DVDTitles")
+                        .HasForeignKey("StudioNumber")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DVDCategory");
+
+                    b.Navigation("Producer");
+
+                    b.Navigation("Studio");
+                });
+
+            modelBuilder.Entity("RopeyDVDs.Models.Loan", b =>
+                {
+                    b.HasOne("RopeyDVDs.Models.DVDCopy", "DVDCopy")
+                        .WithMany("Loans")
+                        .HasForeignKey("CopyNumber")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RopeyDVDs.Models.LoanType", "LoanType")
+                        .WithMany("Loans")
+                        .HasForeignKey("LoanTypeNumber")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RopeyDVDs.Models.Member", "Member")
+                        .WithMany("Loans")
+                        .HasForeignKey("MemberNumber")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DVDCopy");
+
+                    b.Navigation("LoanType");
+
+                    b.Navigation("Member");
+                });
+
+            modelBuilder.Entity("RopeyDVDs.Models.Member", b =>
+                {
+                    b.HasOne("RopeyDVDs.Models.MembershipCategory", "MembershipCategory")
+                        .WithMany("Members")
+                        .HasForeignKey("MembershipCategoryNumber")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MembershipCategory");
+                });
+
+            modelBuilder.Entity("RopeyDVDs.Models.DVDCategory", b =>
+                {
+                    b.Navigation("DVDTitles");
+                });
+
+            modelBuilder.Entity("RopeyDVDs.Models.DVDCopy", b =>
+                {
+                    b.Navigation("Loans");
+                });
+
+            modelBuilder.Entity("RopeyDVDs.Models.DVDTitle", b =>
+                {
+                    b.Navigation("DVDCopies");
+                });
+
+            modelBuilder.Entity("RopeyDVDs.Models.LoanType", b =>
+                {
+                    b.Navigation("Loans");
+                });
+
+            modelBuilder.Entity("RopeyDVDs.Models.Member", b =>
+                {
+                    b.Navigation("Loans");
+                });
+
+            modelBuilder.Entity("RopeyDVDs.Models.MembershipCategory", b =>
+                {
+                    b.Navigation("Members");
+                });
+
+            modelBuilder.Entity("RopeyDVDs.Models.Producer", b =>
+                {
+                    b.Navigation("DVDTitles");
+                });
+
+            modelBuilder.Entity("RopeyDVDs.Models.Studio", b =>
+                {
+                    b.Navigation("DVDTitles");
                 });
 #pragma warning restore 612, 618
         }

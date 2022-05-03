@@ -1,10 +1,13 @@
-﻿namespace RopeyDVDs.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace RopeyDVDs.Models
 {
     public class MembershipCategory
     {
+        [Key]
         public int Id { get; set; }
         public string? MembersgipCategoryDescription{ get; set; }
         public int? MembershipCategoryTotalLoans { get; set; }
-        public ICollection<Member> Members { get; set; }
+        public virtual ICollection<Member>? Members { get; set; }
     }
 }
