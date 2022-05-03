@@ -91,6 +91,27 @@ namespace RopeyDVDs.Controllers
         // GET: DVDTitles/Create
         public IActionResult Create()
         {
+            var dvdCategory = _context.DVDCategory.Select(x => new SelectListItem
+            {
+                Value = x.Id.ToString(),
+                Text = x.CategoryDescription
+            });
+
+            var studio = _context.Studio.Select(x => new SelectListItem
+            {
+                Value = x.ID.ToString(),
+                Text = x.StudioName
+            });
+
+            var producer = _context.Producer.Select(x => new SelectListItem
+            {
+                Value = x.Id.ToString(),
+                Text = x.ProducerName
+            });
+
+            ViewBag.DVDCategory = dvdCategory;
+            ViewBag.Studio = studio;
+            ViewBag.Producer = producer;
             return View();
         }
 

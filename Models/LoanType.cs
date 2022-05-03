@@ -6,6 +6,6 @@
         public string? Type { get; set; }
         public int? LoanDuration { get; set; }
 
-        public ICollection<Loan> Loans { get; set; }
+        public virtual ICollection<Loan>? Loans { get; set; }
     }
 }
