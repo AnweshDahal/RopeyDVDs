@@ -81,10 +81,16 @@ namespace RopeyDVDs.Controllers
             }
 
             var member = await _context.Member.FindAsync(id);
+            var membershipCategory = _context.MembershipCategory.Select(a => new SelectListItem
+            {
+                Value = a.Id.ToString(),
+                Text = a.MembersgipCategoryDescription
+            });
             if (member == null)
             {
                 return NotFound();
             }
+            ViewBag.MembershipCategory = membershipCategory;
             return View(member);
         }
 

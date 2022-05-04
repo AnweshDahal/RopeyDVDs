@@ -97,10 +97,36 @@ namespace RopeyDVDs.Controllers
             }
 
             var loan = await _context.Loan.FindAsync(id);
+            // Loan Type Number
+            var loanType = _context.LoanType.Select(m => new SelectListItem
+            {
+                Value = m.Id.ToString(),
+                Text = m.Type
+            });
+
+            // Copy Number
+            var copyNumber = _context.DVDCopy.Select(m => new SelectListItem
+            {
+                Value = m.Id.ToString(),
+                Text = m.DVDNumber.ToString()
+            });
+            
+            // Member Number
+            var member = _context.Member.Select(m => new SelectListItem
+            {
+                Value = m.Id.ToString(),
+                Text = m.MemberFirstName
+            });
+            
             if (loan == null)
             {
                 return NotFound();
             }
+
+            ViewBag.LoanType = loanType;
+            ViewBag.DVDCopy = copyNumber;
+            ViewBag.Member = member;
+
             return View(loan);
         }
 
