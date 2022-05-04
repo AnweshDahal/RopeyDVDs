@@ -13,6 +13,7 @@
     <thead>
         <tr>
             <th>
+<<<<<<< Updated upstream
                 @Html.DisplayNameFor(model => model.Producer)
             </th>
             <th>
@@ -22,6 +23,14 @@
                 @Html.DisplayNameFor(model => model.IsActive)
             </th>
             <th>
+=======
+                @Html.DisplayNameFor(model => model.DVDName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Producer)
+            </th>
+            <th>
+>>>>>>> Stashed changes
                 @Html.DisplayNameFor(model => model.DVDCategory)
             </th>
             <th>
@@ -43,6 +52,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
+<<<<<<< Updated upstream
                 @Html.DisplayFor(modelItem => item.Producer.Id)
             </td>
             <td>
@@ -50,6 +60,12 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.IsActive)
+=======
+                @Html.DisplayFor(modelItem => item.DVDName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Producer.Id)
+>>>>>>> Stashed changes
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DVDCategory.Id)

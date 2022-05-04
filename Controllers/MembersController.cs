@@ -23,7 +23,8 @@ namespace RopeyDVDs.Controllers
         // GET: Members
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Member.ToListAsync());
+            var applicationDBContext = _context.Member.Include(m => m.MembershipCategory);
+            return View(await applicationDBContext.ToListAsync());
         }
 
         // GET: Members/Details/5
@@ -35,6 +36,7 @@ namespace RopeyDVDs.Controllers
             }
 
             var member = await _context.Member
+                .Include(m => m.MembershipCategory)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (member == null)
             {
@@ -47,6 +49,10 @@ namespace RopeyDVDs.Controllers
         // GET: Members/Create
         public IActionResult Create()
         {
+<<<<<<< Updated upstream
+=======
+            ViewData["MembershipCategoryNumber"] = new SelectList(_context.MembershipCategory, "Id", "Id");
+>>>>>>> Stashed changes
             return View();
         }
 
@@ -63,6 +69,7 @@ namespace RopeyDVDs.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["MembershipCategoryNumber"] = new SelectList(_context.MembershipCategory, "Id", "Id", member.MembershipCategoryNumber);
             return View(member);
         }
 
@@ -79,6 +86,10 @@ namespace RopeyDVDs.Controllers
             {
                 return NotFound();
             }
+<<<<<<< Updated upstream
+=======
+            ViewData["MembershipCategoryNumber"] = new SelectList(_context.MembershipCategory, "Id", "Id", member.MembershipCategoryNumber);
+>>>>>>> Stashed changes
             return View(member);
         }
 
@@ -114,6 +125,7 @@ namespace RopeyDVDs.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["MembershipCategoryNumber"] = new SelectList(_context.MembershipCategory, "Id", "Id", member.MembershipCategoryNumber);
             return View(member);
         }
 
@@ -126,6 +138,7 @@ namespace RopeyDVDs.Controllers
             }
 
             var member = await _context.Member
+                .Include(m => m.MembershipCategory)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (member == null)
             {

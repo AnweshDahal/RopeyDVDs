@@ -23,7 +23,8 @@ namespace RopeyDVDs.Controllers
         // GET: DVDCopies
         public async Task<IActionResult> Index()
         {
-            return View(await _context.DVDCopy.ToListAsync());
+            var applicationDBContext = _context.DVDCopy.Include(d => d.DVDTitle);
+            return View(await applicationDBContext.ToListAsync());
         }
 
         // GET: DVDCopies/Details/5
@@ -35,6 +36,7 @@ namespace RopeyDVDs.Controllers
             }
 
             var dVDCopy = await _context.DVDCopy
+                .Include(d => d.DVDTitle)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (dVDCopy == null)
             {
@@ -47,6 +49,10 @@ namespace RopeyDVDs.Controllers
         // GET: DVDCopies/Create
         public IActionResult Create()
         {
+<<<<<<< Updated upstream
+=======
+            ViewData["DVDNumber"] = new SelectList(_context.DVDTitle, "ID", "ID");
+>>>>>>> Stashed changes
             return View();
         }
 
@@ -55,7 +61,7 @@ namespace RopeyDVDs.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,DVDNumber,DatePurchased")] DVDCopy dVDCopy)
+        public async Task<IActionResult> Create([Bind("Id,DVDNumber,DatePurchased,IsDeleted")] DVDCopy dVDCopy)
         {
             if (ModelState.IsValid)
             {
@@ -63,6 +69,7 @@ namespace RopeyDVDs.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["DVDNumber"] = new SelectList(_context.DVDTitle, "ID", "ID", dVDCopy.DVDNumber);
             return View(dVDCopy);
         }
 
@@ -79,6 +86,10 @@ namespace RopeyDVDs.Controllers
             {
                 return NotFound();
             }
+<<<<<<< Updated upstream
+=======
+            ViewData["DVDNumber"] = new SelectList(_context.DVDTitle, "ID", "ID", dVDCopy.DVDNumber);
+>>>>>>> Stashed changes
             return View(dVDCopy);
         }
 
@@ -87,7 +98,7 @@ namespace RopeyDVDs.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,DVDNumber,DatePurchased")] DVDCopy dVDCopy)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,DVDNumber,DatePurchased,IsDeleted")] DVDCopy dVDCopy)
         {
             if (id != dVDCopy.Id)
             {
@@ -114,6 +125,7 @@ namespace RopeyDVDs.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["DVDNumber"] = new SelectList(_context.DVDTitle, "ID", "ID", dVDCopy.DVDNumber);
             return View(dVDCopy);
         }
 
@@ -126,6 +138,7 @@ namespace RopeyDVDs.Controllers
             }
 
             var dVDCopy = await _context.DVDCopy
+                .Include(d => d.DVDTitle)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (dVDCopy == null)
             {

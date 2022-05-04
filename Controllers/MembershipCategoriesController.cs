@@ -55,7 +55,7 @@ namespace RopeyDVDs.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,MembersgipCategoryDescription,MembershipCategoryTotalLoans")] MembershipCategory membershipCategory)
+        public async Task<IActionResult> Create([Bind("Id,MembershipCategoryDescription,MembershipCategoryTotalLoans")] MembershipCategory membershipCategory)
         {
             if (ModelState.IsValid)
             {
@@ -87,7 +87,7 @@ namespace RopeyDVDs.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,MembersgipCategoryDescription,MembershipCategoryTotalLoans")] MembershipCategory membershipCategory)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,MembershipCategoryDescription,MembershipCategoryTotalLoans")] MembershipCategory membershipCategory)
         {
             if (id != membershipCategory.Id)
             {

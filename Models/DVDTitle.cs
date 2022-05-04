@@ -9,6 +9,7 @@ namespace RopeyDVDs.Models
             this.Actors = new HashSet<Actor>();
         }
         public int ID { get; set; }
+        public String? DVDName { get; set; }
 
         // Foreign key references Producer
         [ForeignKey("Producer")]
