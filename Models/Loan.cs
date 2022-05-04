@@ -23,7 +23,7 @@ namespace RopeyDVDs.Models
 
         public DateTime DateOut { get; set; }
         public DateTime DateDue { get; set; }
-        public DateTime DateReturned { get; set; }
+        public DateTime? DateReturned { get; set; }
 
 
         

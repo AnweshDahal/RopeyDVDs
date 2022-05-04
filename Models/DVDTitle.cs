@@ -27,11 +27,13 @@ namespace RopeyDVDs.Models
         public int StudioNumber { get; set; }
         public virtual Studio? Studio { get; set; }
 
+        public string Title { get; set; }
+
         public DateTime DateReleased { get; set; }
         public float StandardCharge { get; set; }
         public float PenaltyCharge { get; set; }
 
-
+        public ICollection<CastMember>? CastMembers { get; set; }
         public virtual ICollection<Actor>? Actor { get; set; }
         public virtual ICollection<DVDCopy>? DVDCopies { get; set; }
 

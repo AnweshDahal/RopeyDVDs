@@ -1,0 +1,39 @@
+﻿@model Actor
+@{
+    ViewData["Title"] = "SelectActors";
+}
+<h1>Actor Selection</h1>
+
+<h4>Actor</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action ="ShowDVDsofActors">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="form-group mt-3">
+    <label asp-for="ActorSurName" class="control-label">View DVDs of Selected Actors</label>
+    <select asp-for="ActorSurName" class ="form-control" asp-items="ViewBag.ActorSurname" name="actorList"></select>
+    <button class="btn btn-primary mt-3" type="submit">Choose Actor</button>
+</div>
+</form>
+    </div>
+    <div>
+         <form asp-action ="ShowDVDCopiesofActors">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="form-group mt-3">
+    <label asp-for="ActorSurName" class="control-label">View DVDs of Selected Actors</label>
+    <select asp-for="ActorSurName" class ="form-control" asp-items="ViewBag.ActorSurname" name="actorList"></select>
+    <button class="btn btn-primary mt-3" type="submit">Choose Actor</button>
+</div>
+</form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
