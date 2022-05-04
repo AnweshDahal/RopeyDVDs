@@ -23,51 +23,8 @@ namespace RopeyDVDs.Controllers
         // GET: DVDTitles
         public async Task<IActionResult> Index()
         {
-            return View(await _context.DVDTitle.ToListAsync());
-        }
-
-        /**
-         * Get DVD Titles, Producer, Studio, Cast of all
-         * DVDs with the DVD in increasing order of DateReleased,
-         * Show titles of each DVD and the names of all cast member in 
-         * increasing order in relation to the last name of the cast member
-         */
-        public async Task<IActionResult> DVDDetails()
-        {
-            //var dvd = await _context.DVDTitle
-            //    .Join(
-            //        _context.Producer,
-            //        dvd => dvd.ProducerNumber,
-            //        producer => producer.Id,
-            //        (dvd, producer) => new
-            //        {
-            //            ProducerName = producer.ProducerName
-            //        }
-            //    ).Join(
-            //        _context.Studio,
-            //        dvd => dvd.StudioNumber,
-            //        studio => studio.ID,
-            //        (dvd, studio) => new
-            //        {
-            //            StudioName = studio.StudioName,
-            //        }
-            //    ).ToListAsync();
-            var dvd = await _context.DVDTitle.ToListAsync();
-            var producer = await _context.Producer.ToListAsync(); ;
-            var studio = await _context.Studio.ToListAsync();
-            var castMember = await _context.CastMember
-                .Join(
-                    _context.Actor, 
-                    cast => cast.ActorNumber,
-                    actor => actor.Id,
-                    (cast, actor) => new
-                    {
-                        FirstName = actor.ActorFirstName,
-                        LastName = actor.ActorSurName,
-                    }
-
-                ).ToListAsync();
-            return View();
+            var applicationDBContext = _context.DVDTitle.Include(d => d.DVDCategory).Include(d => d.Producer).Include(d => d.Studio);
+            return View(await applicationDBContext.ToListAsync());
         }
 
         // GET: DVDTitles/Details/5
@@ -79,6 +36,9 @@ namespace RopeyDVDs.Controllers
             }
 
             var dVDTitle = await _context.DVDTitle
+                .Include(d => d.DVDCategory)
+                .Include(d => d.Producer)
+                .Include(d => d.Studio)
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (dVDTitle == null)
             {
@@ -91,27 +51,9 @@ namespace RopeyDVDs.Controllers
         // GET: DVDTitles/Create
         public IActionResult Create()
         {
-            var dvdCategory = _context.DVDCategory.Select(x => new SelectListItem
-            {
-                Value = x.Id.ToString(),
-                Text = x.CategoryDescription
-            });
-
-            var studio = _context.Studio.Select(x => new SelectListItem
-            {
-                Value = x.ID.ToString(),
-                Text = x.StudioName
-            });
-
-            var producer = _context.Producer.Select(x => new SelectListItem
-            {
-                Value = x.Id.ToString(),
-                Text = x.ProducerName
-            });
-
-            ViewBag.DVDCategory = dvdCategory;
-            ViewBag.Studio = studio;
-            ViewBag.Producer = producer;
+            ViewData["CategoryNumber"] = new SelectList(_context.DVDCategory, "Id", "Id");
+            ViewData["ProducerNumber"] = new SelectList(_context.Producer, "Id", "Id");
+            ViewData["StudioNumber"] = new SelectList(_context.Studio, "ID", "ID");
             return View();
         }
 
@@ -120,7 +62,7 @@ namespace RopeyDVDs.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,ProducerNumber,CategoryNumber,StudioNumber,DateReleased,StandardCharge,PenaltyCharge")] DVDTitle dVDTitle)
+        public async Task<IActionResult> Create([Bind("ID,DVDName,ProducerNumber,CategoryNumber,StudioNumber,DateReleased,StandardCharge,PenaltyCharge")] DVDTitle dVDTitle)
         {
             if (ModelState.IsValid)
             {
@@ -128,6 +70,9 @@ namespace RopeyDVDs.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["CategoryNumber"] = new SelectList(_context.DVDCategory, "Id", "Id", dVDTitle.CategoryNumber);
+            ViewData["ProducerNumber"] = new SelectList(_context.Producer, "Id", "Id", dVDTitle.ProducerNumber);
+            ViewData["StudioNumber"] = new SelectList(_context.Studio, "ID", "ID", dVDTitle.StudioNumber);
             return View(dVDTitle);
         }
 
@@ -140,31 +85,13 @@ namespace RopeyDVDs.Controllers
             }
 
             var dVDTitle = await _context.DVDTitle.FindAsync(id);
-            var dvdCategory = _context.DVDCategory.Select(x => new SelectListItem
-            {
-                Value = x.Id.ToString(),
-                Text = x.CategoryDescription
-            });
-
-            var studio = _context.Studio.Select(x => new SelectListItem
-            {
-                Value = x.ID.ToString(),
-                Text = x.StudioName
-            });
-
-            var producer = _context.Producer.Select(x => new SelectListItem
-            {
-                Value = x.Id.ToString(),
-                Text = x.ProducerName
-            });
-
             if (dVDTitle == null)
             {
                 return NotFound();
             }
-            ViewBag.DVDCategory = dvdCategory;
-            ViewBag.Studio = studio;
-            ViewBag.Producer = producer;
+            ViewData["CategoryNumber"] = new SelectList(_context.DVDCategory, "Id", "Id", dVDTitle.CategoryNumber);
+            ViewData["ProducerNumber"] = new SelectList(_context.Producer, "Id", "Id", dVDTitle.ProducerNumber);
+            ViewData["StudioNumber"] = new SelectList(_context.Studio, "ID", "ID", dVDTitle.StudioNumber);
             return View(dVDTitle);
         }
 
@@ -173,7 +100,7 @@ namespace RopeyDVDs.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,ProducerNumber,CategoryNumber,StudioNumber,DateReleased,StandardCharge,PenaltyCharge")] DVDTitle dVDTitle)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,DVDName,ProducerNumber,CategoryNumber,StudioNumber,DateReleased,StandardCharge,PenaltyCharge")] DVDTitle dVDTitle)
         {
             if (id != dVDTitle.ID)
             {
@@ -200,6 +127,9 @@ namespace RopeyDVDs.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["CategoryNumber"] = new SelectList(_context.DVDCategory, "Id", "Id", dVDTitle.CategoryNumber);
+            ViewData["ProducerNumber"] = new SelectList(_context.Producer, "Id", "Id", dVDTitle.ProducerNumber);
+            ViewData["StudioNumber"] = new SelectList(_context.Studio, "ID", "ID", dVDTitle.StudioNumber);
             return View(dVDTitle);
         }
 
@@ -212,6 +142,9 @@ namespace RopeyDVDs.Controllers
             }
 
             var dVDTitle = await _context.DVDTitle
+                .Include(d => d.DVDCategory)
+                .Include(d => d.Producer)
+                .Include(d => d.Studio)
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (dVDTitle == null)
             {

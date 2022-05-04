@@ -12,6 +12,8 @@ namespace RopeyDVDs.Models
         [Key]
         public int ID { get; set; }
 
+        public string? DVDName { get; set; }
+
         // Foreign key references Producer
         [ForeignKey("Producer")]
         public int ProducerNumber { get; set; }

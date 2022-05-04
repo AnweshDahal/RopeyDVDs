@@ -25,7 +25,7 @@
                 @Html.DisplayNameFor(model => model.MemberDOB)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MembershipCategoryNumber)
+                @Html.DisplayNameFor(model => model.MembershipCategory)
             </th>
             <th></th>
         </tr>
@@ -46,7 +46,7 @@
                 @Html.DisplayFor(modelItem => item.MemberDOB)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.MembershipCategoryNumber)
+                @Html.DisplayFor(modelItem => item.MembershipCategory.Id)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

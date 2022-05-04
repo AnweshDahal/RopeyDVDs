@@ -23,7 +23,8 @@ namespace RopeyDVDs.Controllers
         // GET: Members
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Member.ToListAsync());
+            var applicationDBContext = _context.Member.Include(m => m.MembershipCategory);
+            return View(await applicationDBContext.ToListAsync());
         }
 
         // GET: Members/Details/5
@@ -35,6 +36,7 @@ namespace RopeyDVDs.Controllers
             }
 
             var member = await _context.Member
+                .Include(m => m.MembershipCategory)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (member == null)
             {
@@ -47,12 +49,7 @@ namespace RopeyDVDs.Controllers
         // GET: Members/Create
         public IActionResult Create()
         {
-            var membershipCategory = _context.MembershipCategory.Select( a => new SelectListItem
-            {
-                Value = a.Id.ToString(),
-                Text = a.MembersgipCategoryDescription
-            });
-            ViewBag.MembershipCategory = membershipCategory;
+            ViewData["MembershipCategoryNumber"] = new SelectList(_context.MembershipCategory, "Id", "Id");
             return View();
         }
 
@@ -69,6 +66,7 @@ namespace RopeyDVDs.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["MembershipCategoryNumber"] = new SelectList(_context.MembershipCategory, "Id", "Id", member.MembershipCategoryNumber);
             return View(member);
         }
 
@@ -81,16 +79,11 @@ namespace RopeyDVDs.Controllers
             }
 
             var member = await _context.Member.FindAsync(id);
-            var membershipCategory = _context.MembershipCategory.Select(a => new SelectListItem
-            {
-                Value = a.Id.ToString(),
-                Text = a.MembersgipCategoryDescription
-            });
             if (member == null)
             {
                 return NotFound();
             }
-            ViewBag.MembershipCategory = membershipCategory;
+            ViewData["MembershipCategoryNumber"] = new SelectList(_context.MembershipCategory, "Id", "Id", member.MembershipCategoryNumber);
             return View(member);
         }
 
@@ -126,6 +119,7 @@ namespace RopeyDVDs.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["MembershipCategoryNumber"] = new SelectList(_context.MembershipCategory, "Id", "Id", member.MembershipCategoryNumber);
             return View(member);
         }
 
@@ -138,6 +132,7 @@ namespace RopeyDVDs.Controllers
             }
 
             var member = await _context.Member
+                .Include(m => m.MembershipCategory)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (member == null)
             {

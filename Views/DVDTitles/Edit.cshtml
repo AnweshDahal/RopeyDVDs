@@ -14,18 +14,23 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ID" />
             <div class="form-group">
+                <label asp-for="DVDName" class="control-label"></label>
+                <input asp-for="DVDName" class="form-control" />
+                <span asp-validation-for="DVDName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="ProducerNumber" class="control-label"></label>
-                <select asp-for="ProducerNumber" class="form-control" asp-items="@ViewBag.Producer"></select>
+                <select asp-for="ProducerNumber" class="form-control" asp-items="ViewBag.ProducerNumber"></select>
                 <span asp-validation-for="ProducerNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="CategoryNumber" class="control-label"></label>
-                <select asp-for="CategoryNumber" class="form-contorl" asp-items="@ViewBag.DVDCategory"></select>
+                <select asp-for="CategoryNumber" class="form-control" asp-items="ViewBag.CategoryNumber"></select>
                 <span asp-validation-for="CategoryNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="StudioNumber" class="control-label"></label>
-                <select asp-for="StudioNumber" class="form-control" asp-items="@ViewBag.Studio"></select>
+                <select asp-for="StudioNumber" class="form-control" asp-items="ViewBag.StudioNumber"></select>
                 <span asp-validation-for="StudioNumber" class="text-danger"></span>
             </div>
             <div class="form-group">

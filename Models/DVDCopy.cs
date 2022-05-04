@@ -11,6 +11,7 @@ namespace RopeyDVDs.Models
         [ForeignKey("DVDTitle")]
         public int DVDNumber { get; set; } //fk refrences DVDTitle
         public virtual DVDTitle? DVDTitle { get; set; }
+        public bool IsDeleted { get; set; }
 
         public DateTime DatePurchased { get; set; }
 
