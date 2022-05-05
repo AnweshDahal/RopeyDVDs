@@ -82,10 +82,20 @@ namespace RopeyDVDs.Controllers
             }
 
             var dVDCopy = await _context.DVDCopy.FindAsync(id);
+            // The following retrieval requires await however the IDE displays the
+            // GetAwaiter not defined error
+            var dvdTitle = _context.DVDTitle.Select(x => new SelectListItem
+            {
+                Value = x.ID.ToString(),
+                Text = x.ID.ToString()
+            });
+
             if (dVDCopy == null)
             {
                 return NotFound();
             }
+
+            ViewBag.DVDTitle = dvdTitle;
             return View(dVDCopy);
         }
 
