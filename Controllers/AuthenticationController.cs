@@ -76,7 +76,7 @@ namespace RopeyDVDs.Controllers
                 };
                 ViewBag.User = userDetails;
                 SetCookie("accessToken", userDetails.Token, 1000000);
-                return Redirect("UserDetails");
+                return RedirectToAction("UserDetails");
             }
             return RedirectToAction("UnauthorizedAccess");
         }

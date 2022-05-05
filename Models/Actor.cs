@@ -10,8 +10,8 @@ namespace RopeyDVDs.Models
         }
         [Key]
         public int Id { get; set; }
-        public string? ActorSurName { get; set; }
-        public string? ActorFirstName { get; set; }
+        public string ActorSurName { get; set; }
+        public string ActorFirstName { get; set; }
 
         public virtual ICollection<DVDTitle>? DVDTitle { get; set; }
     }
