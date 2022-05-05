@@ -36,12 +36,27 @@ namespace RopeyDVDs.Controllers
 
             var member = await _context.Member
                 .FirstOrDefaultAsync(m => m.Id == id);
+            var differenceDate = DateTime.Now.AddDays(-31);
+            var data = from members in _context.Member
+                       join
+            loan in _context.Loan on members.Id equals loan.MemberNumber
+                       where loan.DateOut >= differenceDate
+                       where members.Id == id
+                       join dvdcopy in _context.DVDCopy on loan.CopyNumber equals dvdcopy.Id
+                       join dvdtitle in _context.DVDTitle on dvdcopy.DVDNumber equals dvdtitle.ID
+                       select new
+                       {
+                           Member = members.MemberFirstName + " " + members.MemberLastName,
+                           Loan = loan.Id,
+                           CopyNumber = dvdcopy.Id,
+                           Title = dvdtitle.Title,
+                       };
             if (member == null)
             {
                 return NotFound();
             }
 
-            return View(member);
+            return View(data);
         }
 
         // GET: Members/Create
