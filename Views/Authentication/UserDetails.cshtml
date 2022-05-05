@@ -11,14 +11,8 @@
     <meta name="viewport" content="width=device-width" />
     <title>UserDetails</title>
 </head>
-<script>
-function setToken(){
-    if("@ViewBag.User.Token"){
-        localStorage.setItem("accessToken", "@ViewBag.User.Token")
-    }
-} 
-</script>
-<body onload="setToken()">
+
+<body>
 <div>
     <h4>UserDetailsViewModel</h4>
     <hr />
