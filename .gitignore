@@ -367,3 +367,6 @@ FodyWeavers.xsd
 
 #migraton
 Migrations/
+
+#IGNORE files
+*IGNORE*

@@ -27,6 +27,17 @@ namespace RopeyDVDs.Controllers
             return View(await applicationDBContext.ToListAsync());
         }
 
+        public async Task<IActionResult> DVDDescription()
+        {
+            var DVDTitle = await _context.DVDTitle.Include(d => d.Actor).ToListAsync();
+            Console.WriteLine("Getting all DVDs");
+            foreach (var d in DVDTitle)
+            {
+                Console.WriteLine(d.Actor);
+            }
+            return View("Views/DVDTitles/DVDDetails.cshtml");
+        }
+
         // GET: DVDTitles/Details/5
         public async Task<IActionResult> Details(int? id)
         {
