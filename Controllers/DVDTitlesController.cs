@@ -27,14 +27,26 @@ namespace RopeyDVDs.Controllers
             return View(await applicationDBContext.ToListAsync());
         }
 
-        public async Task<IActionResult> DVDDescription()
+        public IActionResult DVDDescription()
         {
-            var DVDTitle = await _context.DVDTitle.Include(d => d.Actor).ToListAsync();
-            Console.WriteLine("Getting all DVDs");
-            foreach (var d in DVDTitle)
-            {
-                Console.WriteLine(d.Actor);
-            }
+            var data = from dvdtitles in _context.DVDTitle
+                       orderby dvdtitles.DateReleased
+                       select new
+                       {
+                           Title = dvdtitles.Title,
+                           Producer = dvdtitles.Producer.ProducerName.ToString(),
+                           Studio = dvdtitles.Studio.StudioName.ToString(),
+                           Cast = from castmember in dvdtitles.CastMembers
+                                  join actor in _context.Actor on castmember.ActorNumber equals actor.Id
+                                  orderby actor.ActorSurName descending
+                                  select new
+                                  {
+                                      Name = String.Join(" ", new string[] { actor.ActorSurName.ToString(), actor.ActorFirstName.ToString() }),
+                                  }
+                       };
+
+            ViewData["DVDDescription"] = data;
+
             return View("Views/DVDTitles/DVDDetails.cshtml");
         }
 
@@ -62,9 +74,9 @@ namespace RopeyDVDs.Controllers
         // GET: DVDTitles/Create
         public IActionResult Create()
         {
-            ViewData["CategoryNumber"] = new SelectList(_context.DVDCategory, "Id", "Id");
-            ViewData["ProducerNumber"] = new SelectList(_context.Producer, "Id", "Id");
-            ViewData["StudioNumber"] = new SelectList(_context.Studio, "ID", "ID");
+            ViewData["CategoryNumber"] = new SelectList(_context.DVDCategory, "Id", "CategoryDescription");
+            ViewData["ProducerNumber"] = new SelectList(_context.Producer, "Id", "ProducerName");
+            ViewData["StudioNumber"] = new SelectList(_context.Studio, "ID", "StudioName");
             return View();
         }
 

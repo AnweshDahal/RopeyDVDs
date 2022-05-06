@@ -8,7 +8,44 @@
 <hr />
 <table class="table">
     <thead>
-        
+        <tr>
+            <th>
+                DVD Title
+            </th>
+            <th>
+                Producer Name
+            </th>
+            <th>
+                Studio
+            </th>
+            <th>
+                Cast
+            </th>
+        </tr>
     </thead>
+    <tbody>
+        @foreach (var dvd in ViewBag.DVDDescription)
+        {
+            <tr>
+                <td>
+                    @dvd.Title
+                </td>
+                <td>
+                    @dvd.Producer
+                </td>
+                <td>
+                    @dvd.Studio
+                </td>
+                <td>
+                    <ol>
+                        @foreach (var cast in dvd.Cast)
+                        {
+                            <li>@cast.Name</li>
+                        }
+                    </ol>
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
 
