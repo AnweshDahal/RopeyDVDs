@@ -41,7 +41,18 @@ namespace RopeyDVDs.Controllers
                 return NotFound();
             }
 
-            return View(dVDCopy);
+            var recentLoan = from loan in _context.Loan
+                             join member in _context.Member on loan.MemberNumber equals member.Id
+                             where loan.CopyNumber == id
+                             orderby loan.DateOut descending
+
+                             select new
+                             {
+                                 MemberName = member.MemberFirstName + " " + member.MemberLastName,
+                                 Loan = loan
+                             };
+               
+            return View(recentLoan);
         }
 
         // GET: DVDCopies/Create

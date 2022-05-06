@@ -1,4 +1,4 @@
-﻿@model RopeyDVDs.Models.DVDCopy
+﻿
 
 @{
     ViewData["Title"] = "Details";
@@ -7,24 +7,30 @@
 <h1>Details</h1>
 
 <div>
-    <h4>DVDCopy</h4>
+    <h4>Copies Model</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DVDNumber)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DVDNumber)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DatePurchased)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DatePurchased)
-        </dd>
+        @foreach (var item in Model)
+        {
+            <dt class = "col-sm-2">
+                Member Name
+            </dt>
+            <dd class = "col-sm-10">
+               @item.MemberName
+            </dd>
+            <dt class = "col-sm-2">
+               Loan
+            </dt>
+            <dd class = "col-sm-10">
+               @item.Loan.DateOut
+            </dd>
+                                                                                                                                                                                                                                                                                          
+            
+        }
     </dl>
 </div>
+
+
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
