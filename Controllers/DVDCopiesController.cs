@@ -73,7 +73,52 @@ namespace RopeyDVDs.Controllers
                 return NotFound();
             }
 
-            return View(dVDCopy);
+            var recentLoan = from loan in _context.Loan
+                             join member in _context.Member on loan.MemberNumber equals member.Id
+                             join membership in _context.MembershipCategory on member.MembershipCategoryNumber equals membership.Id
+                             join loanType in _context.Loan on loan.LoanTypeNumber equals loanType.Id
+                             join copy in _context.DVDCopy on loan.CopyNumber equals copy.Id
+                             join dvdTitle in _context.DVDTitle on copy.DVDNumber equals dvdTitle.ID
+                             where loan.CopyNumber == id
+                             orderby loan.DateOut descending
+
+                             select new
+                             {
+                                 MemberName = member.MemberFirstName + " " + member.MemberLastName,
+                                 DateDue = loan.DateDue,
+                                 LoanType = loanType.LoanType,
+                                 Membership = membership.MembersgipCategoryDescription,
+                                 DVDTitle = dvdTitle.Title,
+                                 StandardCharge = dvdTitle.StandardCharge,
+                                 PenaltyCharge = dvdTitle.PenaltyCharge,
+                                 DateReturned = loan.DateReturned,
+                                 Loan = loan
+                             };
+
+
+            //var recentLoan = (from loan in _context.Loan
+            //                  join member in _context.Member on loan.MemberNumber equals member.Id
+            //                  join membership in _context.MembershipCategory on member.MembershipCategoryNumber equals membership.Id
+            //                  join loanType in _context.Loan on loan.LoanTypeNumber equals loanType.Id
+            //                  join copy in _context.DVDCopy on loan.CopyNumber equals copy.Id
+            //                  join dvdTitle in _context.DVDTitle on copy.DVDNumber equals dvdTitle.ID
+            //                  where loan.Id == id
+            //                  select new
+            //                  {
+            //                      LoanNumber = id,
+            //                      CopyNumber = loan.CopyNumber,
+            //                      DateOut = loan.DateOut,
+            //                      DateDue = loan.DateDue,
+            //                      DateReturned = loan.DateReturned,
+            //                      MemberName = member.MemberFirstName + " " + member.MemberLastName,
+            //                      Membership = membership.MembersgipCategoryDescription,
+            //                      LoanType = loanType.LoanType,
+            //                      DVDTitle = dvdTitle.Title,
+            //                      StandardCharge = dvdTitle.StandardCharge,
+            //                      PenaltyCharge = dvdTitle.PenaltyCharge,
+            //                  });
+
+            return View(recentLoan);
         }
 
         // GET: DVDCopies/Create
