@@ -1,24 +1,24 @@
 ﻿@model RopeyDVDs.Models.CastMember
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Add New Cast Member";
 }
 
-<h1>Create</h1>
+<h1>Add New Cast Member</h1>
 
-<h4>CastMember</h4>
+
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="DVDNumber" class="control-label"></label>
+                <label asp-for="DVDNumber" class="control-label">Enter DVD Number</label>
                 <input asp-for="DVDNumber" class="form-control" />
                 <span asp-validation-for="DVDNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ActorNumber" class="control-label"></label>
+                <label asp-for="ActorNumber" class="control-label">Enter Actor Number</label>
                 <input asp-for="ActorNumber" class="form-control" />
                 <span asp-validation-for="ActorNumber" class="text-danger"></span>
             </div>
