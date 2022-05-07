@@ -22,8 +22,40 @@ namespace RopeyDVDs.Controllers
 
         // GET: DVDCopies
         public async Task<IActionResult> Index()
-        {
+        {                    
             return View(await _context.DVDCopy.ToListAsync());
+        }
+
+        /**
+         * The user select a dvd copy and find the details of the last loan
+         * Displays
+         *      * if Copy is still on loan
+         *      * Member who borrowed it
+         *      * Date out
+         *      * Due Back
+         *      * DVD title
+         */
+        public IActionResult DVDCopyStatus(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var data = from copy in _context.DVDCopy
+                       join loan in _context.Loan on copy.Id equals loan.CopyNumber
+                       join member in _context.Member on loan.MemberNumber equals member.Id
+                       where copy.Id == id
+                       select new
+                       {
+                           IsOnLoan = (loan.DateReturned == null),
+                           Member = String.Join(" ", new string[] { loan.Member.MemberFirstName, loan.Member.MemberLastName }),
+                           DateOut = loan.DateOut,
+                           DateDue = loan.DateDue,
+                           DateBack = loan.DateReturned,
+                           Title = copy.DVDTitle.Title
+                       };
+
+            ViewData["DVDCopy"] = data.First();
+
+            return View("Views/DVDCopies/Status.cshtml");
         }
 
         // GET: DVDCopies/Details/5

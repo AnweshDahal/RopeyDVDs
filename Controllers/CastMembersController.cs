@@ -47,6 +47,8 @@ namespace RopeyDVDs.Controllers
         // GET: CastMembers/Create
         public IActionResult Create()
         {
+            ViewData["ActorNumber"] = new SelectList(_context.Actor, "Id", "ActorSurName");
+            ViewData["DVDNumber"] = new SelectList(_context.DVDTitle, "ID", "Title");
             return View();
         }
 

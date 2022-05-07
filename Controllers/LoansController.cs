@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RopeyDVDs.DBContext;
 using RopeyDVDs.Models;
+using RopeyDVDs.Models.ViewModels;
 
 namespace RopeyDVDs.Controllers
 {
@@ -18,6 +19,140 @@ namespace RopeyDVDs.Controllers
         public LoansController(ApplicationDBContext context)
         {
             _context = context;
+        }
+
+        /*
+         * 
+         * This function Issues 
+         * 
+         */
+        public IActionResult IssueLoan(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var DVDCopyLoanHistory = from loan in _context.Loan
+                          where loan.CopyNumber == id
+                          where loan.DateReturned == null
+                          orderby loan.DateOut descending
+                          select new
+                          {
+                              DateReturned = loan.DateReturned,
+                          };
+
+            if (DVDCopyLoanHistory.Count() > 0 && DVDCopyLoanHistory.First().DateReturned == null)
+            {
+                ViewData["Message"] = new
+                {
+                    Type = "Error",
+                    Message = "This copy is already on loan"
+                };
+
+                return RedirectToAction("Index", "DVDCopies");
+            }
+
+            var members = _context.Member.Select(m => new SelectListItem
+            {
+                Value = m.Id.ToString(),
+                Text = m.MemberFirstName
+            });
+
+            var dvdCopy = from dvdCopies in _context.DVDCopy
+                          join dvdTitle in _context.DVDTitle on dvdCopies.DVDNumber equals dvdTitle.ID
+                          where dvdCopies.Id == id
+                          select new
+                          {
+                              ID = dvdCopies.Id,
+                              Title = dvdTitle.Title
+                          };
+
+            var loanType = _context.LoanType.Select(x => new SelectListItem
+            {
+                Value = x.Id.ToString(),
+                Text = x.Type.ToString()
+            });
+
+            ViewData["Member"] = members;
+            ViewData["LoanType"] = loanType;
+            ViewData["DVDCopy"] = dvdCopy.FirstOrDefault();
+
+            return View("Views/Loans/Issue.cshtml");
+        }
+
+        /**
+         * This function allows a user to issue a DVD copy on loan
+         * Check if the member issuing the loan is above 18 years
+         * and the DVD is rated age restricted
+         * Check if the member has not passed their loan number
+         * 
+         */
+        // public async Task<IActionResult> Create([Bind("Id,LoanTypeNumber,CopyNumber,MemberNumber,DateOut,DateDue,DateReturned")] Loan loan)
+        [HttpPost]
+        public IActionResult SaveLoan([Bind("ID", "DVDCopyNumber", "MemberNumber", "LoanTypeNumber")] SaveLoanRequestModel saveLoanRequestModel)
+        {
+            // Validations
+
+            // Verifying the member's allowed loans
+            var member = (from members in _context.Member
+                         where members.Id == saveLoanRequestModel.MemberNumber
+                         select new
+                         {
+                             Age = DateTime.Now.Year - members.MemberDOB.Year,
+                             Type = members.MembershipCategoryNumber,
+                             MaxLoan = members.MembershipCategory.MembershipCategoryTotalLoans
+                         }).Take(1);
+
+            var activeLoans = (from loans in _context.Loan
+                               where loans.MemberNumber == saveLoanRequestModel.MemberNumber
+                               where loans.DateReturned == null
+                               select new
+                               {
+                                   ID = loans.Id
+                               }).Count();
+
+            if (Int32.Parse(activeLoans.ToString()) > Int32.Parse(member.First().MaxLoan.ToString())){
+                return RedirectToAction("Index");
+            }
+
+            // Validating the age and the age restricted status of the DVD
+            var copy = (from copies in _context.DVDCopy
+                       where copies.Id == saveLoanRequestModel.DVDCopyNumber
+                       select new
+                       {
+                           IsAgeRestricted = copies.DVDTitle.DVDCategory.AgeRestricted
+                       }).Take(1);
+
+            var IsAgeRestricted = copy.First().IsAgeRestricted;
+
+            if (
+                IsAgeRestricted == true
+                && 
+                Int32.Parse(member.First().Age.ToString()) < 18)
+            {
+                return RedirectToAction("Index", "DVDCopies");
+            }
+
+            // After all validations are passed creating a new loan issue entry in the database
+            var LoanTypeDuration = (from loanTypes in _context.LoanType
+                                    where loanTypes.Id == saveLoanRequestModel.LoanTypeNumber
+                                    select new
+                                    {
+                                        Duration = loanTypes.LoanDuration,
+                                    }).Take(1);
+
+            DateTime DateDue = DateTime.Now.AddDays(Double.Parse(LoanTypeDuration.First().Duration.ToString()));
+
+            Loan loan = new Loan()
+            {
+                LoanTypeNumber = Int32.Parse(saveLoanRequestModel.LoanTypeNumber.ToString()),
+                CopyNumber = Int32.Parse(saveLoanRequestModel.DVDCopyNumber.ToString()),
+                MemberNumber = Int32.Parse(saveLoanRequestModel.MemberNumber.ToString()),
+                DateOut = DateTime.Now,
+                DateDue = DateDue,
+            };
+
+            _context.Loan.Add(loan);
+            _context.SaveChanges();
+            return RedirectToAction("Index", "DVDCopies");
         }
 
         // GET: Loans
