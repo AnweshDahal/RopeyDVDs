@@ -78,6 +78,28 @@ namespace RopeyDVDs.Controllers
             return View(producer);
         }
 
+        // GET: CastMembers/Create
+        public IActionResult CastMemberCreate()
+        {
+            return View();
+        }
+
+        // POST: CastMembers/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CastMemberCreate([Bind("ID,DVDNumber,ActorNumber")] CastMember castMember)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(castMember);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(CastMemberCreate));
+            }
+            return View(castMember);
+        }
+
         // POST: DVDTitles/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -89,7 +111,7 @@ namespace RopeyDVDs.Controllers
             {
                 _context.Add(dVDTitle);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(CastMemberCreate));
             }
             ViewData["CategoryNumber"] = new SelectList(_context.DVDCategory, "Id", "Id", dVDTitle.CategoryNumber);
             ViewData["ProducerNumber"] = new SelectList(_context.Producer, "Id", "Id", dVDTitle.ProducerNumber);
@@ -276,6 +298,29 @@ namespace RopeyDVDs.Controllers
                 return RedirectToAction(nameof(Create));
             }
             return View(studio);
+        }
+
+
+        // GET: Actors/Create
+        public IActionResult ActorCreate()
+        {
+            return View();
+        }
+
+        // POST: Actors/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ActorCreate([Bind("Id,ActorSurName,ActorFirstName")] Actor actor)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(actor);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(ActorCreate));
+            }
+            return View(actor);
         }
 
         public async Task<IActionResult> ShowDVDCopiesofActors()
