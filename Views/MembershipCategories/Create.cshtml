@@ -1,24 +1,23 @@
 ﻿@model RopeyDVDs.Models.MembershipCategory
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Add New Membership Category ";
 }
 
-<h1>Create</h1>
+<h1>Add New Membership Category </h1>
 
-<h4>MembershipCategory</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="MembersgipCategoryDescription" class="control-label"></label>
+                <label asp-for="MembersgipCategoryDescription" class="control-label">Enter Membership Category Description</label>
                 <input asp-for="MembersgipCategoryDescription" class="form-control" />
                 <span asp-validation-for="MembersgipCategoryDescription" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="MembershipCategoryTotalLoans" class="control-label"></label>
+                <label asp-for="MembershipCategoryTotalLoans" class="control-label">Enter Membership Category Total Loans</label>
                 <input asp-for="MembershipCategoryTotalLoans" class="form-control" />
                 <span asp-validation-for="MembershipCategoryTotalLoans" class="text-danger"></span>
             </div>

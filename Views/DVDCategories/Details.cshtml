@@ -1,23 +1,23 @@
 ﻿@model RopeyDVDs.Models.DVDCategory
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "DVD Category Details";
 }
 
-<h1>Details</h1>
+<h1>DVD Category Details</h1>
 
 <div>
-    <h4>DVDCategory</h4>
+    
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CategoryDescription)
+           Category Description
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.CategoryDescription)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AgeRestricted)
+           Age Restricted
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.AgeRestricted)

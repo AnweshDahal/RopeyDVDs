@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<RopeyDVDs.Models.Member>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Member's List";
 }
 
-<h1>Index</h1>
+<h1>Member's List</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -13,19 +13,19 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.MemberLastName)
+                Member's Last Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MemberFirstName)
+               Member's First Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MemberAddress)
+               Member's Address
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MemberDOB)
+                Member's DOB
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MembershipCategoryNumber)
+               Membership's Category Number
             </th>
             <th></th>
         </tr>

@@ -1,12 +1,12 @@
 ﻿@model RopeyDVDs.Models.Loan
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Loans";
 }
 
-<h1>Edit</h1>
+<h1>Edit Loans Details</h1>
 
-<h4>Loan</h4>
+
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -14,32 +14,32 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
-                <label asp-for="LoanTypeNumber" class="control-label"></label>
+                <label asp-for="LoanTypeNumber" class="control-label">Enter Loan's Type Number</label>
                 <select asp-for="LoanTypeNumber" class="form-control" asp-items="@ViewBag.LoanType"></select>
                 <span asp-validation-for="LoanTypeNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CopyNumber" class="control-label"></label>
+                <label asp-for="CopyNumber" class="control-label"> Enter Copy Number</label>
                 <select asp-for="CopyNumber" class="form-control" asp-items="@ViewBag.DVDCopy"></select>
                 <span asp-validation-for="CopyNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="MemberNumber" class="control-label"></label>
+                <label asp-for="MemberNumber" class="control-label">Enter Member's Number</label>
                 <select asp-for="MemberNumber" class="form-control" asp-items="@ViewBag.Member"></select>
                 <span asp-validation-for="MemberNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DateOut" class="control-label"></label>
+                <label asp-for="DateOut" class="control-label">Enter Date Out</label>
                 <input asp-for="DateOut" class="form-control" />
                 <span asp-validation-for="DateOut" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DateDue" class="control-label"></label>
+                <label asp-for="DateDue" class="control-label">Enter Due Date</label>
                 <input asp-for="DateDue" class="form-control" />
                 <span asp-validation-for="DateDue" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DateReturned" class="control-label"></label>
+                <label asp-for="DateReturned" class="control-label">Enter Returned Date</label>
                 <input asp-for="DateReturned" class="form-control" />
                 <span asp-validation-for="DateReturned" class="text-danger"></span>
             </div>

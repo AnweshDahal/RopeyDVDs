@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<RopeyDVDs.Models.DVDCategory>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "DVD Category List";
 }
 
-<h1>Index</h1>
+<h1>DVD Category List</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -13,10 +13,10 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.CategoryDescription)
+                Category Description
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AgeRestricted)
+               Age Restricted
             </th>
             <th></th>
         </tr>

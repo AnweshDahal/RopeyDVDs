@@ -1,12 +1,11 @@
 ﻿@model RopeyDVDs.Models.DVDTitle
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit DVD Title";
 }
 
-<h1>Edit</h1>
+<h1>Edit DVD Title Details</h1>
 
-<h4>DVDTitle</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -14,37 +13,37 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ID" />
             <div class="form-group">
-                <label asp-for="ProducerNumber" class="control-label"></label>
+                <label asp-for="ProducerNumber" class="control-label">Enter Producer's Number</label>
                 <select asp-for="ProducerNumber" class="form-control" asp-items="ViewBag.ProducerNumber"></select>
                 <span asp-validation-for="ProducerNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CategoryNumber" class="control-label"></label>
+                <label asp-for="CategoryNumber" class="control-label">Enter Category's Number</label>
                 <select asp-for="CategoryNumber" class="form-control" asp-items="ViewBag.CategoryNumber"></select>
                 <span asp-validation-for="CategoryNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="StudioNumber" class="control-label"></label>
+                <label asp-for="StudioNumber" class="control-label">Enter Studio's Number </label>
                 <select asp-for="StudioNumber" class="form-control" asp-items="ViewBag.StudioNumber"></select>
                 <span asp-validation-for="StudioNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
+                <label asp-for="Title" class="control-label">Enter Title</label>
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DateReleased" class="control-label"></label>
+                <label asp-for="DateReleased" class="control-label">Enter Released Date</label>
                 <input asp-for="DateReleased" class="form-control" />
                 <span asp-validation-for="DateReleased" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="StandardCharge" class="control-label"></label>
+                <label asp-for="StandardCharge" class="control-label">Enter Standard Charge</label>
                 <input asp-for="StandardCharge" class="form-control" />
                 <span asp-validation-for="StandardCharge" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PenaltyCharge" class="control-label"></label>
+                <label asp-for="PenaltyCharge" class="control-label">Enter Penalty Charge</label>
                 <input asp-for="PenaltyCharge" class="form-control" />
                 <span asp-validation-for="PenaltyCharge" class="text-danger"></span>
             </div>
