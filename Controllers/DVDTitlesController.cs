@@ -235,6 +235,28 @@ namespace RopeyDVDs.Controllers
             return View(data);
         }
 
+        // GET: DVDCategories/Create
+        public IActionResult CategoryCreate()
+        {
+            return View();
+        }
+
+        // POST: DVDCategories/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CategoryCreate([Bind("Id,CategoryDescription,AgeRestricted")] DVDCategory dVDCategory)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(dVDCategory);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Create));
+            }
+            return View(dVDCategory);
+        }
+
         public async Task<IActionResult> ShowDVDCopiesofActors()
         {
             string actorName = Request.Form["actorList"].ToString();
