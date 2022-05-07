@@ -1,6 +1,4 @@
-﻿@model IEnumerable<RopeyDVDs.Models.Member>
-
-@{
+﻿@{
     ViewData["Title"] = "Index";
 }
 
@@ -13,45 +11,57 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.MemberLastName)
+                MemberFirstName
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MemberFirstName)
+                MemberLastName
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MemberAddress)
+                MemberAddress
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MemberDOB)
+                MemberDOB
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MembershipCategoryNumber)
+                Membership
             </th>
-            <th></th>
+            <th>
+                Total Loaned DVDs
+            </th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.MemberLastName)
+                @item.MemberFirstName
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.MemberFirstName)
+                @item.MemberLastName
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.MemberAddress)
+                @item.MemberAddress
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.MemberDOB)
+                @item.MemberDOB
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.MembershipCategoryNumber)
+                @item.Membership
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    @if (item.TotalAcceptedLoan < item.TotalPendingLoan )
+                    {
+                        <p>Too Many DVDs (@item.TotalPendingLoan)</p>
+                    } 
+                    else
+                    {
+                        @item.TotalPendingLoan
+                    }
+                </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.MemberNumber">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.MemberNumber">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.MemberNumber">Delete</a>
             </td>
         </tr>
 }
