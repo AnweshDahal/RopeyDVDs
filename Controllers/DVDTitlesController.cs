@@ -57,6 +57,27 @@ namespace RopeyDVDs.Controllers
             return View();
         }
 
+        public IActionResult ProducerCreate()
+        {
+            return View();
+        }
+
+        // POST: Producers/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ProducerCreate([Bind("Id,ProducerName")] Producer producer)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(producer);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Create));
+            }
+            return View(producer);
+        }
+
         // POST: DVDTitles/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
