@@ -23,7 +23,25 @@ namespace RopeyDVDs.Controllers
         // GET: Members
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Member.ToListAsync());
+            var appDBContext = from member in _context.Member
+                               join membership in _context.MembershipCategory on member.MembershipCategoryNumber equals membership.Id
+                               select new
+                               {
+                                   MemberNumber = member.Id,
+                                   MemberFirstName = member.MemberFirstName,
+                                   MemberLastName = member.MemberLastName,
+                                   MemberAddress = member.MemberAddress,
+                                   MemberDOB = member.MemberDOB,
+                                   Membership = membership.MembersgipCategoryDescription,
+                                   TotalAcceptedLoan = membership.MembershipCategoryTotalLoans,
+                                   TotalPendingLoan = (
+                                                        from loan in _context.Loan
+                                                        where loan.DateReturned == null
+                                                        where loan.MemberNumber == member.Id
+                                                        select loan).Count(),
+                               };
+
+            return View(await appDBContext.ToListAsync());
         }
 
         // GET: Members/Details/5
