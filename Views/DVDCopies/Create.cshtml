@@ -1,26 +1,26 @@
 ﻿@model RopeyDVDs.Models.DVDCopy
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Add New Title";
 }
 
-<h1>Create</h1>
+<h1>Add New Title </h1>
 
-<h4>DVDCopy</h4>
+
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="DVDNumber" class="control-label"></label>
+                <label asp-for="DVDNumber" class="control-label">Enter DVD Number</label>
                 <select asp-for="DVDNumber" class="form-control" asp-items="@ViewBag.DVDNumber">
                     <option selected disabed>Select a DVD</option>
                 </select>
                 <span asp-validation-for="DVDNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DatePurchased" class="control-label"></label>
+                <label asp-for="DatePurchased" class="control-label">Enter Date Purchased</label>
                 <input asp-for="DatePurchased" class="form-control" />
                 <span asp-validation-for="DatePurchased" class="text-danger"></span>
             </div>

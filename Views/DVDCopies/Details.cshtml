@@ -1,23 +1,23 @@
 ﻿@model RopeyDVDs.Models.DVDCopy
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "DVD Copy Details";
 }
 
-<h1>Details</h1>
+<h1>DVD Copy Details</h1>
 
 <div>
-    <h4>DVDCopy</h4>
+   
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DVDNumber)
+           DVD Number
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.DVDNumber)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DatePurchased)
+            Date Purchased
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.DatePurchased)

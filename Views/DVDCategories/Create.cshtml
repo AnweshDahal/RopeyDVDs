@@ -1,19 +1,18 @@
 ﻿@model RopeyDVDs.Models.DVDCategory
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Add New DVD Category";
 }
 
-<h1>Create</h1>
+<h1>Add New DVD Category</h1>
 
-<h4>DVDCategory</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="CategoryDescription" class="control-label"></label>
+                <label asp-for="CategoryDescription" class="control-label">Enter Category Description</label>
                 <input asp-for="CategoryDescription" class="form-control" />
                 <span asp-validation-for="CategoryDescription" class="text-danger"></span>
             </div>
