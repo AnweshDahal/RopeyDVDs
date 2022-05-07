@@ -257,6 +257,27 @@ namespace RopeyDVDs.Controllers
             return View(dVDCategory);
         }
 
+        public IActionResult StudioCreate()
+        {
+            return View();
+        }
+
+        // POST: Studios/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> StudioCreate([Bind("ID,StudioName")] Studio studio)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(studio);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Create));
+            }
+            return View(studio);
+        }
+
         public async Task<IActionResult> ShowDVDCopiesofActors()
         {
             string actorName = Request.Form["actorList"].ToString();
