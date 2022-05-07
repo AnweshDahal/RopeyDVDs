@@ -15,6 +15,7 @@ namespace RopeyDVDs.DBContext
         {
             builder.Entity<CastMember>().HasKey(cm => new { cm.DVDNumber, cm.ActorNumber });
             base.OnModelCreating(builder);
+            builder.Entity<ChangePasswordModel>().HasNoKey();
         }
         public DbSet<RopeyDVDs.Models.Actor> Actor { get; set; }
         public DbSet<RopeyDVDs.Models.CastMember> CastMember { get; set; }
@@ -28,6 +29,7 @@ namespace RopeyDVDs.DBContext
         public DbSet<RopeyDVDs.Models.Producer> Producer { get; set; }
         public DbSet<RopeyDVDs.Models.Studio> Studio { get; set; }
         public DbSet<RopeyDVDs.Models.User> User { get; set; }
+        public DbSet<ChangePasswordModel> ChangePassword { get; set; }
         //public DbSet<RopeyDVDs.Models.ViewModels.UserDetailsViewModel> UserDetailsViewModel { get; set; }
        
     }

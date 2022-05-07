@@ -75,7 +75,7 @@ namespace RopeyDVDs.Controllers
                     Expiration = token.ValidTo
                 };
                 ViewBag.User = userDetails;
-                SetCookie("accessToken", userDetails.Token, 1000000);
+                SetCookie("accessToken", userDetails.Token, 3*60);
                 return RedirectToAction("UserDetails");
             }
             return RedirectToAction("UnauthorizedAccess");
