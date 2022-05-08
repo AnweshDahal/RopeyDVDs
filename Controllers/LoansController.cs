@@ -387,5 +387,37 @@ namespace RopeyDVDs.Controllers
         {
             return _context.Loan.Any(e => e.Id == id);
         }
+
+        [Authorize(Roles ="Manager")]
+        public IActionResult CheckDVDOnLoan()
+        {
+            var dvdOnLoan = from loans in _context.Loan
+                            join dvdCopy in _context.DVDCopy on loans.CopyNumber equals dvdCopy.Id
+                            join dvdTitle in _context.DVDTitle on dvdCopy.DVDNumber equals dvdTitle.ID
+                            join member in _context.Member on loans.MemberNumber equals member.Id
+                            where loans.DateReturned == null
+                            orderby loans.DateOut, dvdTitle.Title
+                            select new
+                            {
+                                Title = dvdTitle.Title,
+                                CopyNumber = dvdCopy.Id,
+                                MemberName = String.Format("{0} {1}", member.MemberFirstName, member.MemberLastName),
+                            };
+
+            var loanPerDayOut = from loans in _context.Loan
+                                where loans.DateReturned == null
+                                group loans by loans.DateOut.ToShortDateString() into g
+                                orderby g.Key
+                                select new
+                                {
+                                    Date = g.Key,
+                                    TotalLoans = g.Count(),
+                                };
+                                
+
+            ViewData["DVDOnLoan"] = dvdOnLoan;
+            ViewData["LoanPerDay"] = loanPerDayOut;
+            return View("Views/Loans/LoanHistory.cshtml");
+        }
     }
 }
