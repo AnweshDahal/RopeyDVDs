@@ -26,7 +26,7 @@ namespace RopeyDVDs.Controllers
         // GET: Members
         public async Task<IActionResult> Index()
         {
-            var appDBContext = from member in _context.Member
+            var members = from member in _context.Member
                                join membership in _context.MembershipCategory on member.MembershipCategoryNumber equals membership.Id
                                select new
                                {
@@ -43,8 +43,8 @@ namespace RopeyDVDs.Controllers
                                                         where loan.MemberNumber == member.Id
                                                         select loan).Count(),
                                };
-
-            return View(await appDBContext.ToListAsync());
+            ViewData["Member"] = members;
+            return View();
         }
 
         // GET: Members/Details/5
