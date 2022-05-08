@@ -12,6 +12,7 @@
             <th>DVD Title</th>
             <th>DVD Copy Number</th>
             <th>Member Name</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -21,6 +22,9 @@
                     <td>@loanOut.Title</td>
                     <td>@loanOut.CopyNumber</td>
                     <td>@loanOut.MemberName</td>
+                    <td>
+                        <a asp-action="Return" asp-route-id="@loanOut.ID">Record Return</a>
+                    </td>
                 </tr>
             }
     </tbody>
