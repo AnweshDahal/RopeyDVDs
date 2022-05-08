@@ -396,7 +396,7 @@ namespace RopeyDVDs.Controllers
                             join dvdTitle in _context.DVDTitle on dvdCopy.DVDNumber equals dvdTitle.ID
                             join member in _context.Member on loans.MemberNumber equals member.Id
                             where loans.DateReturned == null
-                            orderby loans.DateOut, dvdTitle.Title
+                            orderby dvdTitle.Title , loans.DateOut
                             select new
                             {
                                 Title = dvdTitle.Title,
@@ -406,14 +406,15 @@ namespace RopeyDVDs.Controllers
 
             var loanPerDayOut = from loans in _context.Loan
                                 where loans.DateReturned == null
-                                group loans by loans.DateOut.ToShortDateString() into g
-                                orderby g.Key
+                                group loans by loans.DateOut.Date into g
                                 select new
                                 {
-                                    Date = g.Key,
+                                    Key = g.Key.ToShortDateString(),
                                     TotalLoans = g.Count(),
                                 };
-                                
+
+
+
 
             ViewData["DVDOnLoan"] = dvdOnLoan;
             ViewData["LoanPerDay"] = loanPerDayOut;
