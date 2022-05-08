@@ -1,5 +1,4 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿<html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -59,15 +58,23 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Authentication" asp-action="RegisterManager">Register Manager</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Authentication" asp-action="RegisterUser">Register User</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Authentication" asp-action="Login">Login</a>
-                        </li>
+                        @if (User.IsInRole("Manager"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Authentication" asp-action="RegisterManager">Register Manager</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Authentication" asp-action="RegisterUser">Register User</a>
+                            </li>
+                        }
+                        
+                        @if(User?.Identity?.IsAuthenticated != true)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Authentication" asp-action="Login">Login</a>
+                            </li>
+                        }
+                        
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="DVDTitles" asp-action="SelectActor">Show DVD's of Selected Actor</a>
                         </li>

@@ -3,15 +3,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RopeyDVDs.DBContext;
 using RopeyDVDs.Models;
 using RopeyDVDs.Models.ViewModels;
+using RopeyDVDs.Models.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace RopeyDVDs.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class LoansController : Controller
     {
         private readonly ApplicationDBContext _context;
@@ -26,6 +30,7 @@ namespace RopeyDVDs.Controllers
          * This function Issues 
          * 
          */
+        [Authorize(Roles = "Manager")]
         public IActionResult IssueLoan(int? id)
         {
             if (id == null) return NotFound();
@@ -41,13 +46,8 @@ namespace RopeyDVDs.Controllers
 
             if (DVDCopyLoanHistory.Count() > 0 && DVDCopyLoanHistory.First().DateReturned == null)
             {
-                ViewData["Message"] = new
-                {
-                    Type = "Error",
-                    Message = "This copy is already on loan"
-                };
-
-                return RedirectToAction("Index", "DVDCopies");
+                ViewData["Error"] = "This copy is already on loan";
+                return View("Views/Shared/ValidationError.cshtml");
             }
 
             var members = _context.Member.Select(m => new SelectListItem
@@ -110,7 +110,8 @@ namespace RopeyDVDs.Controllers
                                }).Count();
 
             if (Int32.Parse(activeLoans.ToString()) > Int32.Parse(member.First().MaxLoan.ToString())){
-                return RedirectToAction("Index");
+                ViewData["Error"] = "You have reached your maximum number of loans!";
+                return View("Views/Shared/ValidationError.cshtml");
             }
 
             // Validating the age and the age restricted status of the DVD
@@ -128,7 +129,8 @@ namespace RopeyDVDs.Controllers
                 && 
                 Int32.Parse(member.First().Age.ToString()) < 18)
             {
-                return RedirectToAction("Index", "DVDCopies");
+                ViewData["Error"] = "The selected DVD Category is Age Restricted!";
+                return View("Views/Shared/ValidationError.cshtml");
             }
 
             // After all validations are passed creating a new loan issue entry in the database
@@ -152,7 +154,25 @@ namespace RopeyDVDs.Controllers
 
             _context.Loan.Add(loan);
             _context.SaveChanges();
-            return RedirectToAction("Index", "DVDCopies");
+
+            var dvdTitle = _context.DVDTitle.Find(_context.DVDCopy.Find(saveLoanRequestModel.DVDCopyNumber).DVDNumber);
+            var dvdCategory = _context.DVDCategory.Find(dvdTitle.CategoryNumber);
+            var reqMember = _context.Member.Find(saveLoanRequestModel.MemberNumber);
+            ReciptViewModel recipt = new ReciptViewModel()
+            {
+                ReciptNumber = String.Format("{0}-{1}-{2}-{3}", loan.Id, loan.LoanTypeNumber, loan.CopyNumber, loan.MemberNumber),
+                DVDNumber = dvdTitle.ID.ToString(),
+                DVDTitle = dvdTitle.Title,
+                DVDCategory = dvdCategory.CategoryDescription,
+                DateOut = loan.DateOut.ToShortDateString().ToString(),
+                DateDue = loan.DateDue.ToShortDateString().ToString(),
+                LoanDuration = _context.LoanType.Find(saveLoanRequestModel.LoanTypeNumber).LoanDuration.ToString(),
+                StandardCharge = dvdTitle.StandardCharge.ToString(),
+                TotalCharge = (dvdTitle.StandardCharge * _context.LoanType.Find(saveLoanRequestModel.LoanTypeNumber).LoanDuration).ToString(),
+                MemberName = String.Format("{0} {1}", reqMember.MemberFirstName, reqMember.MemberLastName),
+                MemberAddress = reqMember.MemberAddress,
+            };
+            return View("Views/Loans/Recipt.cshtml", recipt);
         }
 
         // GET: Loans

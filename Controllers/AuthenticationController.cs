@@ -76,7 +76,7 @@ namespace RopeyDVDs.Controllers
                 };
                 ViewBag.User = userDetails;
                 SetCookie("accessToken", userDetails.Token, 3*60);
-                return RedirectToAction("UserDetails");
+                return RedirectToAction("Index", "Home");
             }
             return RedirectToAction("UnauthorizedAccess");
         }
@@ -102,6 +102,15 @@ namespace RopeyDVDs.Controllers
                 UserName = model.Username
             };
             var result = await _userManager.CreateAsync(user, model.Password);
+
+            if (!await _roleManager.RoleExistsAsync(UserRoles.Assistant))
+                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Assistant));
+
+            if (await _roleManager.RoleExistsAsync(UserRoles.Assistant))
+            {
+                await _userManager.AddToRoleAsync(user, UserRoles.Assistant);
+            }
+
             if (!result.Succeeded)
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
             return RedirectToAction("Index", "Home");
