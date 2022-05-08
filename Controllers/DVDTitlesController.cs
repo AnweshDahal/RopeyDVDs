@@ -84,6 +84,49 @@ namespace RopeyDVDs.Controllers
             return View();
         }
 
+        public IActionResult ProducerCreate()
+        {
+            return View();
+        }
+
+        // POST: Producers/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ProducerCreate([Bind("Id,ProducerName")] Producer producer)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(producer);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Create));
+            }
+            return View(producer);
+        }
+
+        // GET: CastMembers/Create
+        public IActionResult CastMemberCreate()
+        {
+            return View();
+        }
+
+        // POST: CastMembers/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CastMemberCreate([Bind("ID,DVDNumber,ActorNumber")] CastMember castMember)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(castMember);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(CastMemberCreate));
+            }
+            return View(castMember);
+        }
+
         // POST: DVDTitles/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -95,7 +138,7 @@ namespace RopeyDVDs.Controllers
             {
                 _context.Add(dVDTitle);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(CastMemberCreate));
             }
             ViewData["CategoryNumber"] = new SelectList(_context.DVDCategory, "Id", "Id", dVDTitle.CategoryNumber);
             ViewData["ProducerNumber"] = new SelectList(_context.Producer, "Id", "Id", dVDTitle.ProducerNumber);
@@ -244,6 +287,72 @@ namespace RopeyDVDs.Controllers
         }
 
         [Authorize(Roles = "Assistant, Manager")]
+        // GET: DVDCategories/Create
+        public IActionResult CategoryCreate()
+        {
+            return View();
+        }
+
+        // POST: DVDCategories/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CategoryCreate([Bind("Id,CategoryDescription,AgeRestricted")] DVDCategory dVDCategory)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(dVDCategory);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Create));
+            }
+            return View(dVDCategory);
+        }
+
+        public IActionResult StudioCreate()
+        {
+            return View();
+        }
+
+        // POST: Studios/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> StudioCreate([Bind("ID,StudioName")] Studio studio)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(studio);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Create));
+            }
+            return View(studio);
+        }
+
+
+        // GET: Actors/Create
+        public IActionResult ActorCreate()
+        {
+            return View();
+        }
+
+        // POST: Actors/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ActorCreate([Bind("Id,ActorSurName,ActorFirstName")] Actor actor)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(actor);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(ActorCreate));
+            }
+            return View(actor);
+        }
+
         public async Task<IActionResult> ShowDVDCopiesofActors()
         {
             string actorName = Request.Form["actorList"].ToString();

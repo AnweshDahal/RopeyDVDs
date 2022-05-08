@@ -27,31 +27,38 @@
             <th>
                Membership's Category Number
             </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.MemberLastName)
+                @item.MemberFirstName
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.MemberFirstName)
+                @item.MemberLastName
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.MemberAddress)
+                @item.MemberAddress
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.MemberDOB)
+                @item.MemberDOB
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.MembershipCategoryNumber)
+                @item.Membership
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    @if (item.TotalAcceptedLoan < item.TotalPendingLoan )
+                    {
+                        <p>Too Many DVDs (@item.TotalPendingLoan)</p>
+                    } 
+                    else
+                    {
+                        @item.TotalPendingLoan
+                    }
+                <a asp-action="Edit" asp-route-id="@item.MemberNumber">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Current Loan Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Delete" asp-route-id="@item.MemberNumber">Delete</a>
             </td>
         </tr>
 }

@@ -243,6 +243,38 @@ namespace RopeyDVDs.Controllers
             return View(loan);
         }
 
+        public async Task<IActionResult> LoanCheckout(Loan loanModel)
+        {
+            var loanDetails = (from loan in _context.Loan
+                               join member in _context.Member on loan.MemberNumber equals member.Id
+                               join membership in _context.MembershipCategory on member.MembershipCategoryNumber equals membership.Id
+                               join loanType in _context.Loan on loan.LoanTypeNumber equals loanType.Id
+                               join copy in _context.DVDCopy on loan.CopyNumber equals copy.Id
+                               join dvdTitle in _context.DVDTitle on copy.DVDNumber equals dvdTitle.ID
+                               where loan.Id == loanModel.Id
+                               select new
+                               {   
+                                   LoanNumber = loanModel.Id,
+                                   CopyNumber = loan.CopyNumber,
+                                   DateOut = loan.DateOut,
+                                   DateDue = loan.DateDue,
+                                   DateReturned = loanModel.DateReturned,
+                                   MemberName = member.MemberFirstName + " " + member.MemberLastName,
+                                   Membership = membership.MembersgipCategoryDescription,
+                                   LoanType = loanType.LoanType,
+                                   DVDTitle = dvdTitle.Title,
+                                   StandardCharge = dvdTitle.StandardCharge,
+                                   PenaltyCharge = dvdTitle.PenaltyCharge,
+                               }).FirstOrDefault();
+            //Console.Write("======================");
+            //System.Diagnostics.Debug.WriteLine("This is the loan detail loan type" + loanModel.LoanType);
+            //Console.Write("======================");
+            return View(loanDetails);    
+                
+        }
+
+
+
         // GET: Loans/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -316,6 +348,8 @@ namespace RopeyDVDs.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
+                //return RedirectToAction("LoanCheckout", new { loanModel = loan });
+                //return RedirectToAction("LoanCheckout");
             }
             return View(loan);
         }
