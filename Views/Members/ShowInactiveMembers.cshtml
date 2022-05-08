@@ -1,0 +1,59 @@
+﻿@{
+    ViewData["Title"] = "Inactive Members";
+}
+
+<h1>Inactive Members</h1>
+
+<h4>Members who have not borrowed for the last 30 days but have borrowed atleast once</h4>
+<br/>
+<br/>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Member Number
+            </th>
+            
+            <th>
+                First Name
+            </th>
+            <th>
+                Last Name
+            </th>
+            <th>
+                Address
+            </th>
+            <th>
+               Date Of Birth
+            </th>
+            <th>
+              Category Number
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @item.Id
+            </td>    
+             <td>
+                @item.MemberFirstName
+            </td>  
+            <td>
+                @item.MemberLastName
+            </td>  
+             <td>
+                @item.MemberAddress
+            </td>  
+             <td>
+                @item.MemberDOB
+            </td>  
+             <td>
+                @item.MembershipCategoryNumber
+            </td>  
+        </tr>
+}
+    </tbody>
+</table>

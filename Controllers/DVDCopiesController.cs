@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +11,6 @@ using RopeyDVDs.Models;
 
 namespace RopeyDVDs.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class DVDCopiesController : Controller
     {
         private readonly ApplicationDBContext _context;
@@ -25,41 +22,9 @@ namespace RopeyDVDs.Controllers
 
         // GET: DVDCopies
         public async Task<IActionResult> Index()
-        {                    
-            return View(await _context.DVDCopy.ToListAsync());
-        }
-
-        [Authorize(Roles = "Manager")]
-        /**
-         * The user select a dvd copy and find the details of the last loan
-         * Displays
-         *      * if Copy is still on loan
-         *      * Member who borrowed it
-         *      * Date out
-         *      * Due Back
-         *      * DVD title
-         */
-        public IActionResult DVDCopyStatus(int? id)
         {
-            if (id == null) return NotFound();
-
-            var data = from copy in _context.DVDCopy
-                       join loan in _context.Loan on copy.Id equals loan.CopyNumber
-                       join member in _context.Member on loan.MemberNumber equals member.Id
-                       where copy.Id == id
-                       select new
-                       {
-                           IsOnLoan = (loan.DateReturned == null),
-                           Member = String.Join(" ", new string[] { loan.Member.MemberFirstName, loan.Member.MemberLastName }),
-                           DateOut = loan.DateOut,
-                           DateDue = loan.DateDue,
-                           DateBack = loan.DateReturned,
-                           Title = copy.DVDTitle.Title
-                       };
-
-            ViewData["DVDCopy"] = data.First();
-
-            return View("Views/DVDCopies/Status.cshtml");
+            var applicationDBContext = _context.DVDCopy.Include(d => d.DVDTitle);
+            return View(await applicationDBContext.ToListAsync());
         }
 
         // GET: DVDCopies/Details/5
@@ -71,70 +36,20 @@ namespace RopeyDVDs.Controllers
             }
 
             var dVDCopy = await _context.DVDCopy
+                .Include(d => d.DVDTitle)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (dVDCopy == null)
             {
                 return NotFound();
             }
 
-            var recentLoan = from loan in _context.Loan
-                             join member in _context.Member on loan.MemberNumber equals member.Id
-                             join membership in _context.MembershipCategory on member.MembershipCategoryNumber equals membership.Id
-                             join loanType in _context.Loan on loan.LoanTypeNumber equals loanType.Id
-                             join copy in _context.DVDCopy on loan.CopyNumber equals copy.Id
-                             join dvdTitle in _context.DVDTitle on copy.DVDNumber equals dvdTitle.ID
-                             where loan.CopyNumber == id
-                             orderby loan.DateOut descending
-
-                             select new
-                             {
-                                 MemberName = member.MemberFirstName + " " + member.MemberLastName,
-                                 DateDue = loan.DateDue,
-                                 LoanType = loanType.LoanType,
-                                 Membership = membership.MembersgipCategoryDescription,
-                                 DVDTitle = dvdTitle.Title,
-                                 StandardCharge = dvdTitle.StandardCharge,
-                                 PenaltyCharge = dvdTitle.PenaltyCharge,
-                                 DateReturned = loan.DateReturned,
-                                 Loan = loan
-                             };
-
-
-            //var recentLoan = (from loan in _context.Loan
-            //                  join member in _context.Member on loan.MemberNumber equals member.Id
-            //                  join membership in _context.MembershipCategory on member.MembershipCategoryNumber equals membership.Id
-            //                  join loanType in _context.Loan on loan.LoanTypeNumber equals loanType.Id
-            //                  join copy in _context.DVDCopy on loan.CopyNumber equals copy.Id
-            //                  join dvdTitle in _context.DVDTitle on copy.DVDNumber equals dvdTitle.ID
-            //                  where loan.Id == id
-            //                  select new
-            //                  {
-            //                      LoanNumber = id,
-            //                      CopyNumber = loan.CopyNumber,
-            //                      DateOut = loan.DateOut,
-            //                      DateDue = loan.DateDue,
-            //                      DateReturned = loan.DateReturned,
-            //                      MemberName = member.MemberFirstName + " " + member.MemberLastName,
-            //                      Membership = membership.MembersgipCategoryDescription,
-            //                      LoanType = loanType.LoanType,
-            //                      DVDTitle = dvdTitle.Title,
-            //                      StandardCharge = dvdTitle.StandardCharge,
-            //                      PenaltyCharge = dvdTitle.PenaltyCharge,
-            //                  });
-
-            return View(recentLoan);
+            return View(dVDCopy);
         }
 
         // GET: DVDCopies/Create
         public IActionResult Create()
         {
-            var dvdNumber = _context.DVDTitle.Select(x => new SelectListItem
-            {
-                Value = x.ID.ToString(),
-                Text = x.ID.ToString()
-            });
-
-            ViewBag.DVDNumber = dvdNumber;
+            ViewData["DVDNumber"] = new SelectList(_context.DVDTitle, "ID", "ID");
             return View();
         }
 
@@ -143,7 +58,7 @@ namespace RopeyDVDs.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,DVDNumber,DatePurchased")] DVDCopy dVDCopy)
+        public async Task<IActionResult> Create([Bind("Id,IsDeleted,DVDNumber,DatePurchased")] DVDCopy dVDCopy)
         {
             if (ModelState.IsValid)
             {
@@ -151,6 +66,7 @@ namespace RopeyDVDs.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["DVDNumber"] = new SelectList(_context.DVDTitle, "ID", "ID", dVDCopy.DVDNumber);
             return View(dVDCopy);
         }
 
@@ -163,20 +79,11 @@ namespace RopeyDVDs.Controllers
             }
 
             var dVDCopy = await _context.DVDCopy.FindAsync(id);
-            // The following retrieval requires await however the IDE displays the
-            // GetAwaiter not defined error
-            var dvdTitle = _context.DVDTitle.Select(x => new SelectListItem
-            {
-                Value = x.ID.ToString(),
-                Text = x.ID.ToString()
-            });
-
             if (dVDCopy == null)
             {
                 return NotFound();
             }
-
-            ViewBag.DVDTitle = dvdTitle;
+            ViewData["DVDNumber"] = new SelectList(_context.DVDTitle, "ID", "ID", dVDCopy.DVDNumber);
             return View(dVDCopy);
         }
 
@@ -185,7 +92,7 @@ namespace RopeyDVDs.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,DVDNumber,DatePurchased")] DVDCopy dVDCopy)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,IsDeleted,DVDNumber,DatePurchased")] DVDCopy dVDCopy)
         {
             if (id != dVDCopy.Id)
             {
@@ -212,6 +119,7 @@ namespace RopeyDVDs.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["DVDNumber"] = new SelectList(_context.DVDTitle, "ID", "ID", dVDCopy.DVDNumber);
             return View(dVDCopy);
         }
 
@@ -224,6 +132,7 @@ namespace RopeyDVDs.Controllers
             }
 
             var dVDCopy = await _context.DVDCopy
+                .Include(d => d.DVDTitle)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (dVDCopy == null)
             {
@@ -247,6 +156,73 @@ namespace RopeyDVDs.Controllers
         private bool DVDCopyExists(int id)
         {
             return _context.DVDCopy.Any(e => e.Id == id);
+        }
+        public async Task<IActionResult> UpdateDeleteStatus()
+        {
+            DateTime dateLimit = DateTime.Now.AddDays(-365);
+
+            List<DVDCopy> dVDCopies = (
+                from dvdCopy in _context.DVDCopy.Where(d => d.IsDeleted == false && d.DatePurchased.CompareTo(dateLimit) < 0)
+                select dvdCopy
+                ).ToList();
+
+
+            // updating the deleted status of the dvd copies
+            foreach (DVDCopy dvdCopy in dVDCopies)
+            {
+                dvdCopy.IsDeleted = true;
+            }
+
+            _context.SaveChanges();
+
+            var data = from dvdCopy in _context.DVDCopy.Where(d => d.IsDeleted == false && d.DatePurchased.CompareTo(dateLimit) < 0)
+                       join loan in _context.Loan on dvdCopy.Id equals loan.CopyNumber
+                       where loan.DateReturned != null
+                       join dvdTitle in _context.DVDTitle on dvdCopy.DVDNumber equals dvdTitle.ID
+                       select new
+                       {
+                           DVDname = dvdTitle.Title,
+                           dateReleased = dvdTitle.DateReleased.ToShortDateString(),
+                           datePurchased = dvdCopy.DatePurchased.ToShortDateString(),
+                       };
+            var modifiedData = data.GroupBy(d => d.DVDname).Select(g => g.FirstOrDefault()).ToList();
+
+            return View("Views/DVDCopies/ViewOldDVDCopies.cshtml", modifiedData);
+        }
+
+
+        public async Task<IActionResult> ViewOldDVDCopies()
+        {
+            DateTime dateLimit = DateTime.Now.AddDays(-365);
+            var loanedOldDVDCopies = from dvdCopy in _context.DVDCopy.Where(d => d.IsDeleted == false && d.DatePurchased.CompareTo(dateLimit) < 0)
+                                     join loan in _context.Loan on dvdCopy.Id equals loan.CopyNumber
+                                     where loan.DateReturned != null
+                                     join dvdTitle in _context.DVDTitle on dvdCopy.DVDNumber equals dvdTitle.ID
+                                     select new
+                                     {
+                                         DVDname = dvdTitle.Title,
+                                         dateReleased = dvdTitle.DateReleased.ToShortDateString(),
+                                         datePurchased = dvdCopy.DatePurchased.ToShortDateString(),
+                                     };
+            var modifiedData = loanedOldDVDCopies.GroupBy(d => d.DVDname).Select(g => g.FirstOrDefault()).ToList();
+
+            return View(modifiedData);
+        }
+
+        public async Task<IActionResult> ViewLast31DaysLoanedDVDCopies()
+        {
+            DateTime dateLimit = DateTime.Now.AddDays(-31);
+            var booksLoanedLast31Days = from dvdCopy in _context.DVDCopy.Where(d => d.IsDeleted == false)
+                       join loan in _context.Loan on dvdCopy.Id equals loan.CopyNumber
+                       where (loan.DateReturned != null && loan.DateOut.CompareTo(dateLimit) >= 0)
+                       join dvdTitle in _context.DVDTitle on dvdCopy.DVDNumber equals dvdTitle.ID
+                       select new
+                       {
+                           DVDname = dvdTitle.Title,
+                           dateReleased = dvdTitle.DateReleased.ToShortDateString(),
+                           datePurchased = dvdCopy.DatePurchased.ToShortDateString(),
+                       };
+            return View(booksLoanedLast31Days);
         }
     }
 }

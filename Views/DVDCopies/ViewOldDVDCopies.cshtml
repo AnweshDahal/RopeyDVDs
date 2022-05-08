@@ -1,0 +1,42 @@
+﻿@{
+    ViewData["Title"] = "Old DVD Copies";
+}
+
+<h1>Old DVD Copies</h1>
+
+<form asp-action="UpdateDeleteStatus">
+    <div class="form-group">
+        <input type= "submit" value="Delete All" class="btn btn-danger"></input>
+    </div>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                DVD Name
+            </th>
+            <th>
+                Date Released
+            </th>
+            <th>
+                Date Purchased
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @item.DVDname
+            </td>    
+             <td>
+                @item.dateReleased
+            </td>  
+            <td>
+                @item.datePurchased
+            </td>  
+        </tr>
+}
+    </tbody>
+</table>
