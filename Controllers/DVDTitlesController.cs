@@ -30,6 +30,7 @@ namespace RopeyDVDs.Controllers
             return View(await applicationDBContext.ToListAsync());
         }
 
+        [Authorize(Roles = "Manager")]
         public IActionResult DVDDescription()
         {
             var data = from dvdtitles in _context.DVDTitle
@@ -257,12 +258,14 @@ namespace RopeyDVDs.Controllers
             return _context.DVDTitle.Any(e => e.ID == id);
         }
 
-
+        [Authorize(Roles = "Assistant, Manager")]
         public async Task<IActionResult> SelectActor(Actor actor)
         {
             ViewData["ActorSurName"] = new SelectList(_context.Set<Actor>(), "ActorSurName", "ActorSurName", actor.ActorSurName);
             return View();
         }
+
+        [Authorize(Roles = "Assistant, Manager")]
         public async Task<IActionResult> ShowDVDsofActors()
         {
             string actorName = Request.Form["actorList"].ToString();
@@ -283,6 +286,7 @@ namespace RopeyDVDs.Controllers
             return View(data);
         }
 
+        [Authorize(Roles = "Assistant, Manager")]
         // GET: DVDCategories/Create
         public IActionResult CategoryCreate()
         {

@@ -15,6 +15,10 @@ namespace RopeyDVDs.Controllers
 
         public IActionResult Index()
         {
+            if (User?.Identity?.IsAuthenticated != true)
+            {
+                return RedirectToAction("Login", "Authentication");
+            }
             return View();
         }
 

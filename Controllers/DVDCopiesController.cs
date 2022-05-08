@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +13,7 @@ using RopeyDVDs.Models;
 
 namespace RopeyDVDs.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class DVDCopiesController : Controller
     {
         private readonly ApplicationDBContext _context;
@@ -26,6 +29,7 @@ namespace RopeyDVDs.Controllers
             return View(await _context.DVDCopy.ToListAsync());
         }
 
+        [Authorize(Roles = "Manager")]
         /**
          * The user select a dvd copy and find the details of the last loan
          * Displays

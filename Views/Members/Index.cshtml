@@ -56,10 +56,8 @@
                     {
                         @item.TotalPendingLoan
                     }
-                </td>
-            <td>
                 <a asp-action="Edit" asp-route-id="@item.MemberNumber">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.MemberNumber">Details</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Current Loan Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.MemberNumber">Delete</a>
             </td>
         </tr>

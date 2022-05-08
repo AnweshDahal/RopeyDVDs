@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +13,7 @@ using RopeyDVDs.Models;
 
 namespace RopeyDVDs.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class MembersController : Controller
     {
         private readonly ApplicationDBContext _context;
@@ -45,6 +48,7 @@ namespace RopeyDVDs.Controllers
         }
 
         // GET: Members/Details/5
+        [Authorize(Roles = "Assistant, Manager")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)

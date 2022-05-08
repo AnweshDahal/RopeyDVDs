@@ -1,0 +1,52 @@
+﻿@model RopeyDVDs.Models.ViewModels.ReciptViewModel;
+@{
+    ViewData["Title"] = "Recipt";
+}
+
+<h1>Issue On Loan</h1>
+
+<h4>Loan</h4>
+<hr />
+<div class="container m-auto">
+    <div class="recipt m-auto">
+        <div class="recipt__header">
+            <h1 class="recipt__title text-center">Ropeys DVD</h1>
+            <p class="recipt__address text-center">123 Old St. Kathmandu, Bagmati Prdaesh</p>
+            <p class="recipt__company-info d-flex justify-content-between">
+                <span>REG#17</span>
+                <span>TRN#1313</span>
+                <span>CSHR#000133659</span>
+                <span>STR#9658</span>
+            </p>
+            <p class="recipt__user">
+                Helped by: Robert EO Speedwagon
+            </p>
+            <p class="recipt__card-number font-weight-bold text-center">DB Infinite Card #: ************3322</p>
+            <p class="spacer">****************************************</p>
+            <div class="recipt__payment-info">
+                <p>Status: ACCEPTED</p>
+                <p>Card Holder: @Model.MemberName</p>
+                <p>Card Type: Mastercard Credit</p>
+                <p>Card Number: ************3322</p>
+                <p>Payment type: POS Payment</p>
+                <p>Terminal: Ropeys DVDs</p>
+            </div>
+            <p class="spacer">****************************************</p>
+            <div class="recipt__items d-flex justify-content-between">
+                <span>@Model.DVDNumber</span> <span>@Model.DVDTitle</span> <span>@Model.DVDCategory</span> <span>Rs. @Model.StandardCharge</span> <span>@Model.LoanDuration Days</span>
+            </div>
+            <p class="recipt__total text-right"><strong>Total: Rs. @Model.TotalCharge</strong></p>
+            <p class="spacer">****************************************</p>
+            <div class="member-details">
+                <p>Member Name: @Model.MemberName</p>
+                <p>Member Address: @Model.MemberAddress</p>
+                <p>Date Out: @Model.DateOut</p>
+                <p>Date Due: @Model.DateDue</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
