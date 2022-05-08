@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +13,7 @@ using RopeyDVDs.Models;
 
 namespace RopeyDVDs.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class DVDCopiesController : Controller
     {
         private readonly ApplicationDBContext _context;
@@ -26,6 +29,40 @@ namespace RopeyDVDs.Controllers
             var applicationDBContext = _context.DVDCopy.Include(d => d.DVDTitle);
             return View(await applicationDBContext.ToListAsync());
         }
+
+        [Authorize(Roles = "Manager")]
+        /**
+         * The user select a dvd copy and find the details of the last loan
+         * Displays
+         *      * if Copy is still on loan
+         *      * Member who borrowed it
+         *      * Date out
+         *      * Due Back
+         *      * DVD title
+         */
+        public IActionResult DVDCopyStatus(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var data = from copy in _context.DVDCopy
+                       join loan in _context.Loan on copy.Id equals loan.CopyNumber
+                       join member in _context.Member on loan.MemberNumber equals member.Id
+                       where copy.Id == id
+                       select new
+                       {
+                           IsOnLoan = (loan.DateReturned == null),
+                           Member = String.Join(" ", new string[] { loan.Member.MemberFirstName, loan.Member.MemberLastName }),
+                           DateOut = loan.DateOut,
+                           DateDue = loan.DateDue,
+                           DateBack = loan.DateReturned,
+                           Title = copy.DVDTitle.Title
+                       };
+
+            ViewData["DVDCopy"] = data.First();
+
+            return View("Views/DVDCopies/Status.cshtml");
+        }
+
 
         // GET: DVDCopies/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -157,6 +194,8 @@ namespace RopeyDVDs.Controllers
         {
             return _context.DVDCopy.Any(e => e.Id == id);
         }
+
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> UpdateDeleteStatus()
         {
             DateTime dateLimit = DateTime.Now.AddDays(-365);
@@ -190,7 +229,7 @@ namespace RopeyDVDs.Controllers
             return View("Views/DVDCopies/ViewOldDVDCopies.cshtml", modifiedData);
         }
 
-
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> ViewOldDVDCopies()
         {
             DateTime dateLimit = DateTime.Now.AddDays(-365);
@@ -209,6 +248,7 @@ namespace RopeyDVDs.Controllers
             return View(modifiedData);
         }
 
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> ViewLast31DaysLoanedDVDCopies()
         {
             DateTime dateLimit = DateTime.Now.AddDays(-31);
