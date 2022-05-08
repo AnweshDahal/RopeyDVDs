@@ -388,6 +388,20 @@ namespace RopeyDVDs.Controllers
             return _context.Loan.Any(e => e.Id == id);
         }
 
+        [Authorize(Roles = "Manager")]
+        public IActionResult Return(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var loan = _context.Loan.FirstOrDefault(e => e.Id == id);
+            loan.DateReturned = DateTime.Now;
+
+            _context.Update(loan);
+            _context.SaveChanges();
+
+            return RedirectToAction("CheckDVDOnLoan", "Loans");
+        }
+
         [Authorize(Roles ="Manager")]
         public IActionResult CheckDVDOnLoan()
         {
@@ -399,6 +413,7 @@ namespace RopeyDVDs.Controllers
                             orderby dvdTitle.Title , loans.DateOut
                             select new
                             {
+                                ID = loans.Id,
                                 Title = dvdTitle.Title,
                                 CopyNumber = dvdCopy.Id,
                                 MemberName = String.Format("{0} {1}", member.MemberFirstName, member.MemberLastName),
