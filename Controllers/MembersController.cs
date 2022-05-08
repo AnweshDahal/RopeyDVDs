@@ -77,7 +77,7 @@ namespace RopeyDVDs.Controllers
             {
                 return NotFound();
             }
-
+            ViewData["Member"]=member.MemberFirstName+" "+ member.MemberLastName;
             return View(data);
         }
 
