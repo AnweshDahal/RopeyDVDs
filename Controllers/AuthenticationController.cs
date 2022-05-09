@@ -194,7 +194,8 @@ namespace RopeyDVDs.Controllers
 
         public async Task<IActionResult> Logout()
         {
-            await _signInManager.SignOutAsync();
+            //Delete the Cookie from Browser.
+            Response.Cookies.Delete("accessToken");
             ViewData["Logout"] = false;
             return LocalRedirect("~/");
         }
