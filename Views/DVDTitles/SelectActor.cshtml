@@ -1,31 +1,40 @@
 ﻿@model Actor
 @{
-    ViewData["Title"] = "SelectActors";
+ViewData["Title"] = "SelectActors";
 }
 <h1>Actor Selection</h1>
+<br />
 
-<h4>Select Actor's Surname</h4>
-<hr />
 <div class="row">
+    <h5>View Movies played by Actor with Cast Members</h5>
+<hr />
     <div class="col-md-4">
-        <form asp-action ="ShowDVDsofActors">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-<div class="form-group mt-3">
-    <label asp-for="ActorSurName" class="control-label">View Movies played by Selected Actor with Cast Details</label>
-    <select asp-for="ActorSurName" class ="form-control" asp-items="ViewBag.ActorSurname" name="actorList"></select>
-    <button class="btn btn-primary mt-3" type="submit">Choose Actor</button>
-</div>
-</form>
+        <form asp-action="ShowDVDsofActors">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group mt-3">
+                <label asp-for="ActorSurName" class="control-label">Select Actor Surname</label>
+                <select asp-for="ActorSurName" class="form-control" asp-items="ViewBag.ActorSurname"
+                    name="actorList"></select>
+                <button class="btn btn-primary mt-3" type="submit">Choose Actor</button>
+                  <br />
+                  <br />
+                  <br />
+            </div>
+        </form>
     </div>
-    <div>
-         <form asp-action ="ShowDVDCopiesofActors">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-<div class="form-group mt-3">
-    <label asp-for="ActorSurName" class="control-label">View DVDs Copies Available for the Movies Played By Selected Actor</label>
-    <select asp-for="ActorSurName" class ="form-control" asp-items="ViewBag.ActorSurname" name="actorList"></select>
-    <button class="btn btn-primary mt-3" type="submit">Choose Actor</button>
-</div>
-</form>
+  
+    <h5>View DVDs Copies Available for the Movies Played By Selected Actor</h5>
+    <hr />
+    <div class="col-md-4">
+        <form asp-action="ShowDVDCopiesofActors">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+               <div class="form-group mt-3">
+                <label asp-for="ActorSurName" class="control-label">Select Actor Surname</label>
+                <select asp-for="ActorSurName" class="form-control" asp-items="ViewBag.ActorSurname"
+                    name="actorList"></select>
+                <button class="btn btn-primary mt-3" type="submit">Choose Actor</button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -35,5 +44,5 @@
 
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
