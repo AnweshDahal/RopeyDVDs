@@ -239,7 +239,27 @@ namespace RopeyDVDs.Controllers
         public async Task<IActionResult> ViewOldDVDCopies()
         {
             DateTime dateLimit = DateTime.Now.AddDays(-365);
-            var loanedOldDVDCopies = from dvdCopy in _context.DVDCopy.Where(d => d.IsDeleted == false && d.DatePurchased.CompareTo(dateLimit) < 0)
+
+            var allDVDCopies = from dvdCopy in _context.DVDCopy.Where(d => d.IsDeleted == false && d.DatePurchased.CompareTo(dateLimit) < 0)
+                               select dvdCopy;
+            var dvdCopiesLoaned = from dvdCopies in _context.DVDCopy
+                                  join loan in _context.Loan on dvdCopies.Id equals loan.CopyNumber
+                                  select dvdCopies;
+            var neverLoanedDVDCopies = allDVDCopies.Except(dvdCopiesLoaned).ToList();
+
+
+
+            var list1 = from dvdCopy in _context.DVDCopy.Where(d => neverLoanedDVDCopies.Contains(d))
+                        join dvdTitle in _context.DVDTitle on dvdCopy.DVDNumber equals dvdTitle.ID
+                        select new
+                        {
+                            DVDname = dvdTitle.Title,
+                            dateReleased = dvdTitle.DateReleased.ToShortDateString(),
+                            datePurchased = dvdCopy.DatePurchased.ToShortDateString(),
+                        };
+
+
+            var loanedOldDVDCopies = (from dvdCopy in _context.DVDCopy.Where(d => d.IsDeleted == false && d.DatePurchased.CompareTo(dateLimit) < 0)
                                      join loan in _context.Loan on dvdCopy.Id equals loan.CopyNumber
                                      where loan.DateReturned != null
                                      join dvdTitle in _context.DVDTitle on dvdCopy.DVDNumber equals dvdTitle.ID
@@ -248,10 +268,12 @@ namespace RopeyDVDs.Controllers
                                          DVDname = dvdTitle.Title,
                                          dateReleased = dvdTitle.DateReleased.ToShortDateString(),
                                          datePurchased = dvdCopy.DatePurchased.ToShortDateString(),
-                                     };
-            var modifiedData = loanedOldDVDCopies.GroupBy(d => d.DVDname).Select(g => g.FirstOrDefault()).ToList();
+                                     }).ToList();
 
-            return View(modifiedData);
+            var mergedList = loanedOldDVDCopies.Concat(list1);
+
+
+            return View(mergedList);
         }
 
         [Authorize(Roles = "Manager")]
