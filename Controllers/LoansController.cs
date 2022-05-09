@@ -90,7 +90,8 @@ namespace RopeyDVDs.Controllers
         public IActionResult SaveLoan([Bind("ID", "DVDCopyNumber", "MemberNumber", "LoanTypeNumber")] SaveLoanRequestModel saveLoanRequestModel)
         {
             // Validations
-
+            var isDeleted = _context.DVDCopy.Find(saveLoanRequestModel.DVDCopyNumber).IsDeleted;
+            if (isDeleted == true) return BadRequest();
             // Verifying the member's allowed loans
             var member = (from members in _context.Member
                          where members.Id == saveLoanRequestModel.MemberNumber
