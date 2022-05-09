@@ -272,8 +272,10 @@ namespace RopeyDVDs.Controllers
 
             var mergedList = loanedOldDVDCopies.Concat(list1);
 
+            var modifiedData = mergedList.GroupBy(d => d.DVDname).Select(g => g.FirstOrDefault()).ToList();
 
-            return View(mergedList);
+
+            return View(modifiedData);
         }
 
         [Authorize(Roles = "Manager")]
