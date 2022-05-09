@@ -44,6 +44,12 @@ namespace RopeyDVDs.Controllers
         {
             if (id == null) return NotFound();
 
+            var everLoaned = from loan in _context.Loan
+                             where loan.CopyNumber == id
+                             select loan;
+
+            if (everLoaned.Count() == 0) return RedirectToAction("Index");
+
             var data = from copy in _context.DVDCopy
                        join loan in _context.Loan on copy.Id equals loan.CopyNumber
                        join member in _context.Member on loan.MemberNumber equals member.Id
