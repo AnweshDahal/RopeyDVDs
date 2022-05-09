@@ -13,13 +13,14 @@
         <form asp-action="CastMemberCreate">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="DVDNumber" class="control-label"></label>
-                <input asp-for="DVDNumber" class="form-control" />
+                <label asp-for="DVDNumber" class="control-label">For DVD</label>
+                <h3 class="display-3">@ViewBag.DVDTitle.Title</h3>
+                <input type="hidden" class="d-none" asp-for="DVDNumber" value="@ViewBag.DVDTitle.ID" />
                 <span asp-validation-for="DVDNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ActorNumber" class="control-label"></label>
-                <input asp-for="ActorNumber" class="form-control" />
+                <label asp-for="ActorNumber" class="control-label">Enter Actor Number</label>
+                <select asp-for="ActorNumber" class="form-control" asp-items="ViewBag.ActorNumber"></select>
                 <span asp-validation-for="ActorNumber" class="text-danger"></span>
             </div>
             <div class="form-group">

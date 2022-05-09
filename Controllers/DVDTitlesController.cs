@@ -106,8 +106,12 @@ namespace RopeyDVDs.Controllers
         }
 
         // GET: CastMembers/Create
-        public IActionResult CastMemberCreate()
+        public IActionResult CastMemberCreate(int? id)
         {
+            if (id == null) return NotFound();
+
+            ViewData["DVDTitle"] = _context.DVDTitle.Find(id);
+            ViewData["ActorNumber"] = new SelectList(_context.Actor, "Id", "ActorSurName");
             return View();
         }
 
@@ -138,7 +142,7 @@ namespace RopeyDVDs.Controllers
             {
                 _context.Add(dVDTitle);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(CastMemberCreate));
+                return RedirectToAction(nameof(CastMemberCreate), new { id=dVDTitle.ID});
             }
             ViewData["CategoryNumber"] = new SelectList(_context.DVDCategory, "Id", "Id", dVDTitle.CategoryNumber);
             ViewData["ProducerNumber"] = new SelectList(_context.Producer, "Id", "Id", dVDTitle.ProducerNumber);
