@@ -2,7 +2,44 @@
     ViewData["Title"] = "Home Page";
 }
 
+<div class="banner">
+        <h1 class="text-light"><span class="badge bg-primary display-3">Ropeys DVDs</span></h1>
+    </div>
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    
+    <div class="row mt-3">
+        <div class="col-4 d-flex justify-content-start">
+            <img class="rounded width-100" src="https://avatars.dicebear.com/api/adventurer/@(User?.Identity?.Name).svg" />
+        </div>
+        <div class="col-8 d-flex align-items-center justify-content-start">
+            <h2 class="display-3">Hello! @User?.Identity?.Name</h2>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-4">
+            <div class="card bg-success">
+                <div class="card-body">
+                    <h5 class="text-light">Total Available DVD Titles</h5>
+                    <h4 class="text-light"><strong>@ViewBag.Info.TotalDVDs</strong></h4>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="card bg-primary">
+                <div class="card-body">
+                    <h5 class="text-light">Total Available DVD Copies</h5>
+                    <h4 class="text-light"><strong>@ViewBag.Info.TotalCopies</strong></h4>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="card bg-warning">
+                <div class="card-body">
+                    <h5 class="text-light">Total Members</h5>
+                    <h4 class="text-light"><strong>@ViewBag.Info.TotalMembers</strong></h4>
+                </div>
+            </div>
+        </div>
+    </div>
+    
 </div>
