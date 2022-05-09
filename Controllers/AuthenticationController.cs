@@ -13,17 +13,20 @@ namespace RopeyDVDs.Controllers
     public class AuthenticationController : Controller
     {
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
 
         public AuthenticationController(
             UserManager<IdentityUser> userManager,
             RoleManager<IdentityRole> roleManager,
+            SignInManager<IdentityUser> signInManager,
             IConfiguration configuration)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _configuration = configuration;
+            _signInManager = signInManager;
         }
         public IActionResult Index()
         {
@@ -187,6 +190,13 @@ namespace RopeyDVDs.Controllers
                 option.Expires = DateTime.Now.AddMilliseconds(10);
 
             Response.Cookies.Append(key, value, option);
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            ViewData["Logout"] = false;
+            return LocalRedirect("~/");
         }
     }
 }
