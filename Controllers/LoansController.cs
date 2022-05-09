@@ -214,7 +214,7 @@ namespace RopeyDVDs.Controllers
             var copyNumber = _context.DVDCopy.Select(m => new SelectListItem
             {
                 Value = m.Id.ToString(),
-                Text = m.DVDNumber.ToString()
+                Text = m.Id.ToString()
             });
             ViewBag.DVDCopy = copyNumber;
             // Member Number

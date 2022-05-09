@@ -199,5 +199,52 @@ namespace RopeyDVDs.Controllers
         {
             return _context.Member.Any(e => e.Id == id);
         }
+
+        public async Task<IActionResult> ShowInActiveMembers()
+        {
+            DateTime dateLimit = DateTime.Now.AddDays(-31);
+            var membersWhoBorrowedAtleastOnce = from loan in _context.Loan
+                                                group loan.Id by loan.MemberNumber into g
+                                                select new { MemberId = g.Key };
+
+            var membersWhoBorrowedInLast30Days = from loan in _context.Loan.Where(d => d.DateOut.CompareTo(dateLimit) >= 0)
+                                                 group loan.Id by loan.MemberNumber into g
+                                                 select new
+                                                 {
+                                                     MemberId = g.Key
+                                                 };
+
+            var requiredMemberIds = membersWhoBorrowedAtleastOnce.Except(membersWhoBorrowedInLast30Days).ToList();
+
+            var allMembers = from member in _context.Member
+                             select new
+                             {
+                                 Id = member.Id,
+                                 MemberLastName = member.MemberLastName,
+                                 MemberFirstName = member.MemberFirstName,
+                                 MemberAddress = member.MemberAddress,
+                                 MemberDOB = member.MemberDOB,
+                                 MembershipCategoryNumber = member.MembershipCategoryNumber
+                             };
+
+            List<Member> requiredMembers = new List<Member>();
+
+
+
+            foreach (var member in allMembers)
+            {
+                foreach (var item in requiredMemberIds)
+                {
+
+                    if (member.Id == item.MemberId)
+                    {
+                        var temp = new Member { MemberLastName = member.MemberLastName, MemberFirstName = member.MemberFirstName, MemberAddress = member.MemberAddress };
+                        requiredMembers.Add(temp);
+                    }
+                }
+            }
+
+            return View(requiredMembers);
+        }
     }
 }

@@ -1,102 +1,36 @@
-﻿
+﻿@model RopeyDVDs.Models.DVDCopy
 
 @{
-    ViewData["Title"] = "DVD Copy Details";
+    ViewData["Title"] = "Details";
 }
 
-<h1>DVD Copy Details</h1>
+<h1>Details</h1>
 
 <div>
-    <h4>Copies Model</h4>
+    <h4>DVDCopy</h4>
     <hr />
     <dl class="row">
-        @foreach (var item in Model)
-        {
-            <dt class = "col-sm-2">
-                DVD Title
-            </dt>
-            <dd class = "col-sm-10">
-               @item.DVDTitle
-            </dd>
-            <dt class = "col-sm-2">
-                Standard Charge
-            </dt>
-            <dd class = "col-sm-10">
-               @item.StandardCharge
-            </dd>
-           
-            <dt class = "col-sm-2">
-                Member Name
-            </dt>
-            <dd class = "col-sm-10">
-               @item.MemberName
-            </dd>
-            <dt class = "col-sm-2">
-               Membership 
-            </dt>
-            <dd class = "col-sm-10">
-               @item.Membership
-            </dd>
-            <dt class = "col-sm-2">
-               Loan Type
-            </dt>
-            <dd class = "col-sm-10">
-               @item.LoanType.Type
-            </dd>
-            <dt class = "col-sm-2">
-               Loan DateOut
-            </dt>
-            <dd class = "col-sm-10">
-               @item.Loan.DateOut
-            </dd>
-            <dt class = "col-sm-2">
-               Loan Date Due
-            </dt>
-            <dd class = "col-sm-10">
-               @item.Loan.DateDue
-            </dd>
-
-            <dt class = "col-sm-2">
-               Total Days Due
-            </dt>
-            <dd class = "col-sm-10">
-              
-               @if (@item.Loan.DateReturned == null)
-                {
-                    <p>0</p>
-                }
-                else
-                {
-                    TimeSpan differenceInDays = @item.Loan.DateReturned - @item.Loan.DateDue;
-                    int TotalDueDays = differenceInDays.Days;
-                    
-                    <p>@TotalDueDays</p>
-                }
-            </dd>
-            <dt class = "col-sm-2">
-                Penalty Charge
-            </dt>
-            <dd class = "col-sm-10">
-                @if (@item.Loan.DateReturned == null)
-                {
-                    <p>0</p>
-                }
-                else
-                {
-                    TimeSpan differenceInDays = @item.Loan.DateReturned - @item.Loan.DateDue;
-                    int TotalDueDays = differenceInDays.Days;
-                    float penaltyChargePerDay = TotalDueDays * @item.StandardCharge;
-                    <p>@penaltyChargePerDay</p>
-                }
-            </dd>
-
-                                                                                                                                                                                                                                                                                          
-            
-        }
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.IsDeleted)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.IsDeleted)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DVDTitle)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DVDTitle.ID)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DatePurchased)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DatePurchased)
+        </dd>
     </dl>
 </div>
-
-
 <div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
