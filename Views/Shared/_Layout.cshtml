@@ -72,9 +72,6 @@
                             </li>
                         }
                         
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="DVDTitles" asp-action="SelectActor">Show DVD's of Selected Actor</a>
-                        </li>
                          
 
                     </ul>        </div>
@@ -90,6 +87,7 @@
                                         </a>
                                         <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right">
                                             <a asp-action="Logout" asp-controller="Authentication" class="dropdown-item">Logout</a>
+                                            <a asp-action="ChangePassword" asp-controller="User" class="dropdown-item">Change Password</a>
                                         </div>
                                     </div>
                                 </div>
@@ -180,12 +178,6 @@
                                              <a class="nav-link" asp-area="" asp-controller="DVDCopies" asp-action="Index">DVD Copies</a>
                                         </li>
                                         <li>
-                                            <a class="nav-link" asp-area="" asp-controller="DVDCopies" asp-action="ViewOldDVDCopies">Old DVD Copies</a>
-                                        </li>
-                                         <li>
-                                             <a class="nav-link" asp-area="" asp-controller="DVDCopies" asp-action="ViewLast31DaysLoanedDVDCopies">Loaned Past 31 DVD Copies</a>
-                                        </li>
-                                        <li>
                                             <a class="nav-link" asp-area="" asp-controller="DVDTitles" asp-action="Index">DVD Titles</a>
                                         </li>
                                         <li>
@@ -208,20 +200,34 @@
                                         </li>
                                          <li>
                                              <a class="nav-link" asp-area="" asp-controller="Studios" asp-action="Index">Studios</a>
+                                        </li> 
+                                    </ul>
+                                </li>
+                                <li class="app-sidebar__heading">View DVDs</li>
+                                <li>
+                                <a href="#">
+                                        <i class="metismenu-icon pe-7s-diamond"></i>
+                                        Show DVD Records
+                                        <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                                    </a>
+                                     <ul>
+                                          <li>
+                                            <a class="nav-link" asp-area="" asp-controller="DVDCopies" asp-action="ViewOldDVDCopies">Old DVD Copies</a>
                                         </li>
                                          <li>
-                                             <a class="nav-link" asp-area="" asp-controller="Users" asp-action="Index">Users</a>
+                                             <a class="nav-link" asp-area="" asp-controller="DVDCopies" asp-action="ViewLast31DaysLoanedDVDCopies">Loaned Past 31 DVD Copies</a>
                                         </li>
-                                        <li>
+                                          <li>
                                             <a class="nav-link" asp-area="" asp-controller="Loans" asp-action="CheckDVDOnLoan">DVD On Loan</a>
                                         </li>
                                         <li>
                                             <a class="nav-link" asp-area="" asp-controller="DVDTitles" asp-action="DVDDescription">DVD Information</a>
                                         </li>
                                         <li>
-                                            <a class="nav-link" asp-area="" asp-controller="DVDTitles" asp-action="DVDDescription">DVD Information</a>
+                                            <a class="nav-link" asp-area="" asp-controller="DVDTitles" asp-action="SelectActor">Show DVD's of Selected Actor</a>
                                         </li>
-                                    </ul>
+                                     </ul>
+
                                 </li>
                             </ul>
                         </div>
