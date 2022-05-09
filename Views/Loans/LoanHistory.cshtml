@@ -1,0 +1,54 @@
+﻿@{
+    ViewData["Title"] = "Loan History";
+}
+
+<h1>DVD Copies Currently On Loan</h1>
+
+<h4>Loan</h4>
+<hr />
+<table class="table">
+    <thead>
+        <tr>
+            <th>DVD Title</th>
+            <th>DVD Copy Number</th>
+            <th>Member Name</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+            @foreach(var loanOut in @ViewBag.DVDOnLoan)
+            {
+                <tr>
+                    <td>@loanOut.Title</td>
+                    <td>@loanOut.CopyNumber</td>
+                    <td>@loanOut.MemberName</td>
+                    <td>
+                        <a asp-action="Return" asp-route-id="@loanOut.ID">Record Return</a>
+                    </td>
+                </tr>
+            }
+    </tbody>
+</table>
+<hr />
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Date Out</th>
+            <th>Total Loan Count</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var loanCount in @ViewBag.LoanPerDay)
+        {
+            <tr>
+                <td>@loanCount.Key</td>
+                <td>@loanCount.TotalLoans</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

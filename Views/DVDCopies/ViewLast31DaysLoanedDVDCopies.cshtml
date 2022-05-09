@@ -1,0 +1,37 @@
+﻿@{
+    ViewData["Title"] = "Loaned DVD Copies for last 31 days";
+}
+
+<h1>Loaned DVD Copies For Last 31 Days</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                DVD Name
+            </th>
+            <th>
+                Date Released
+            </th>
+            <th>
+                Date Purchased
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @item.DVDname
+            </td>    
+             <td>
+                @item.dateReleased
+            </td>  
+            <td>
+                @item.datePurchased
+            </td>  
+        </tr>
+}
+    </tbody>
+</table>

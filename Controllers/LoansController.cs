@@ -387,5 +387,53 @@ namespace RopeyDVDs.Controllers
         {
             return _context.Loan.Any(e => e.Id == id);
         }
+
+        [Authorize(Roles = "Manager")]
+        public IActionResult Return(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var loan = _context.Loan.FirstOrDefault(e => e.Id == id);
+            loan.DateReturned = DateTime.Now;
+
+            _context.Update(loan);
+            _context.SaveChanges();
+
+            return RedirectToAction("CheckDVDOnLoan", "Loans");
+        }
+
+        [Authorize(Roles ="Manager")]
+        public IActionResult CheckDVDOnLoan()
+        {
+            var dvdOnLoan = from loans in _context.Loan
+                            join dvdCopy in _context.DVDCopy on loans.CopyNumber equals dvdCopy.Id
+                            join dvdTitle in _context.DVDTitle on dvdCopy.DVDNumber equals dvdTitle.ID
+                            join member in _context.Member on loans.MemberNumber equals member.Id
+                            where loans.DateReturned == null
+                            orderby dvdTitle.Title , loans.DateOut
+                            select new
+                            {
+                                ID = loans.Id,
+                                Title = dvdTitle.Title,
+                                CopyNumber = dvdCopy.Id,
+                                MemberName = String.Format("{0} {1}", member.MemberFirstName, member.MemberLastName),
+                            };
+
+            var loanPerDayOut = from loans in _context.Loan
+                                where loans.DateReturned == null
+                                group loans by loans.DateOut.Date into g
+                                select new
+                                {
+                                    Key = g.Key.ToShortDateString(),
+                                    TotalLoans = g.Count(),
+                                };
+
+
+
+
+            ViewData["DVDOnLoan"] = dvdOnLoan;
+            ViewData["LoanPerDay"] = loanPerDayOut;
+            return View("Views/Loans/LoanHistory.cshtml");
+        }
     }
 }
